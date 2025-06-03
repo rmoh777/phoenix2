@@ -139,4 +139,21 @@ section {
 .impact-number {
   font-size: var(--font-size-3xl);
   color: var(--color-primary);
+}
+
+.section--gray {
+  background: var(--color-gray-50);
+}
+
+.mission-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.mission-text {
+  font-size: var(--font-size-lg);
+  color: var(--color-gray-600);
+  line-height: 1.7;
+  margin: 0 0 1.5rem 0;
 } 
