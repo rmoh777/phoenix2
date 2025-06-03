@@ -1,0 +1,26 @@
+/* Hero section */
+.hero {
+  background: linear-gradient(to right, var(--color-primary), var(--color-primary-dark));
+  color: var(--color-white);
+  padding: var(--spacing-2xl) 0;
+  text-align: left;
+}
+
+/* Section headings */
+section h2 {
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Custom section spacing */
+section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .hero {
+    padding: var(--spacing-xl) 0;
+    text-align: center;
+  }
+} 
