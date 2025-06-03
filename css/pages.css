@@ -39,6 +39,7 @@ section {
 .section-title {
   font-size: var(--font-size-3xl);
   margin: var(--spacing-xl) 0 var(--spacing-lg);
+  text-align: center;
 }
 
 .section-center {
