@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data & Analysis - Lifeline Connect</title>
-    <meta name="description" content="Explore data visualizations and analysis about the Lifeline program, digital divide, and connectivity trends.">
+    <title>Data - Georgia Connects</title>
+    <meta name="description" content="Explore data visualizations and analysis about the Lifeline program, digital divide, and connectivity trends from Georgia Connects.">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/layout.css">
@@ -15,7 +15,7 @@
         .viz-container {
             position: relative;
             width: 100%;
-            height: 600px;
+            min-height: 600px;
             margin: var(--spacing-lg) 0;
             border-radius: var(--border-radius);
             overflow: hidden;
@@ -90,7 +90,7 @@
     <header class="header">
         <div class="container">
             <nav class="nav">
-                <a href="index.html" class="logo">Lifeline Connect</a>
+                <a href="index.html" class="logo">Georgia Connects</a>
                 <ul class="nav-list">
                     <li><a href="about.html" class="nav-link">About</a></li>
                     <li><a href="news.html" class="nav-link">News</a></li>
@@ -119,12 +119,35 @@
             </div>
         </section>
 
-        <!-- Lifeline Program Enrollment -->
+        <!-- Lifeline Program Enrollment (Tableau Embed) -->
         <section class="container analysis-section">
-            <h2>Lifeline Program Enrollment Trends</h2>
+            <h2>Lifeline Program Statistics</h2>
             <div class="viz-container">
-                <!-- Replace with actual Tableau embed code -->
-                <iframe src="https://public.tableau.com/views/LifelineEnrollmentTrends/Dashboard1?:embed=y&:display_count=yes&:origin=viz_share_link" allowfullscreen></iframe>
+                <div class='tableauPlaceholder' id='viz1748976347361' style='position: relative'>
+                    <noscript><a href='#'><img alt='Lifeline Program Statistics ' src='https://public.tableau.com/static/images/Pr/ProgramStatsX/Story1/1_rss.png' style='border: none' /></a></noscript>
+                    <object class='tableauViz'  style='display:none;'>
+                        <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+                        <param name='embed_code_version' value='3' />
+                        <param name='path' value='views/ProgramStatsX/Story1?:language=en-US&amp;:embed=true&amp;:sid=&amp;:redirect=auth' />
+                        <param name='toolbar' value='no' />
+                        <param name='static_image' value='https://public.tableau.com/static/images/Pr/ProgramStatsX/Story1/1.png' />
+                        <param name='animate_transition' value='yes' />
+                        <param name='display_static_image' value='yes' />
+                        <param name='display_spinner' value='yes' />
+                        <param name='display_overlay' value='yes' />
+                        <param name='display_count' value='yes' />
+                        <param name='language' value='en-US' />
+                    </object>
+                </div>
+                <script type='text/javascript'>
+                    var divElement = document.getElementById('viz1748976347361');
+                    var vizElement = divElement.getElementsByTagName('object')[0];
+                    vizElement.style.width='100%';
+                    vizElement.style.height='724px';
+                    var scriptElement = document.createElement('script');
+                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+                    vizElement.parentNode.insertBefore(scriptElement, vizElement);
+                </script>
             </div>
             
             <div class="key-findings">
@@ -202,7 +225,7 @@
         <div class="container">
             <div class="footer__grid">
                 <div>
-                    <h3 class="footer__title">Lifeline Connect</h3>
+                    <h3 class="footer__title">Georgia Connects</h3>
                     <p>Helping eligible households access affordable connectivity solutions.</p>
                 </div>
                 <div>
@@ -216,12 +239,12 @@
                 </div>
                 <div>
                     <h3 class="footer__title">Contact Us</h3>
-                    <p>Email: info@lifelineconnect.org</p>
+                    <p>Email: info@georgiaconnects.org</p>
                     <p>Phone: (555) 123-4567</p>
                 </div>
             </div>
             <div style="text-align: center; margin-top: var(--spacing-xl); padding-top: var(--spacing-lg); border-top: 1px solid var(--color-gray-700);">
-                <p>&copy; <span id="copyrightYear">2025</span> Lifeline Connect. All rights reserved.</p>
+                <p>&copy; <span id="copyrightYear">2025</span> Georgia Connects. All rights reserved.</p>
             </div>
         </div>
     </footer>
