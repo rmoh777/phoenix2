@@ -17,11 +17,17 @@
 }
 
 .btn--secondary {
-  background: var(--color-secondary);
+  background: #111;
+  color: #fff;
 }
 
 .btn:hover, .btn:focus {
   background: var(--color-primary-dark);
+}
+
+.btn--secondary:hover, .btn--secondary:focus {
+  background: #222;
+  color: #fff;
 }
 
 /* Card styles */
