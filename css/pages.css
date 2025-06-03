@@ -93,4 +93,43 @@ section {
   margin-top: var(--spacing-xl);
   padding-top: var(--spacing-lg);
   border-top: 1px solid var(--color-gray-700);
+}
+
+/* About Page Styles */
+.page-header {
+  background-color: var(--color-gray-100);
+  padding: var(--spacing-xl) 0;
+}
+
+.page-header h1 {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--spacing-sm);
+}
+
+.page-header p {
+  font-size: var(--font-size-xl);
+  color: var(--color-gray-600);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.service-card h3 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-md);
+}
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-xl);
+  text-align: center;
+}
+
+.impact-number {
+  font-size: var(--font-size-3xl);
+  color: var(--color-primary);
 } 
