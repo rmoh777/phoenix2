@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data & Analysis - Lifeline Connect</title>
+    <meta name="description" content="Explore data visualizations and analysis about the Lifeline program, digital divide, and connectivity trends.">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .viz-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            margin: var(--spacing-lg) 0;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .viz-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .analysis-section {
+            margin: var(--spacing-2xl) 0;
+        }
+        
+        .analysis-section h2 {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--spacing-lg);
+            color: var(--color-gray-900);
+        }
+        
+        .analysis-section h3 {
+            font-size: var(--font-size-xl);
+            margin: var(--spacing-lg) 0 var(--spacing-md);
+            color: var(--color-gray-800);
+        }
+        
+        .analysis-section p {
+            font-size: var(--font-size-lg);
+            line-height: 1.7;
+            color: var(--color-gray-700);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .key-findings {
+            background-color: var(--color-gray-100);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+            margin: var(--spacing-lg) 0;
+        }
+        
+        .key-findings h4 {
+            font-size: var(--font-size-lg);
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .key-findings ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .key-findings li {
+            margin-bottom: var(--spacing-sm);
+            padding-left: var(--spacing-lg);
+            position: relative;
+        }
+        
+        .key-findings li::before {
+            content: "•";
+            color: var(--color-primary);
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="index.html" class="logo">Lifeline Connect</a>
+                <ul class="nav-list">
+                    <li><a href="about.html" class="nav-link">About</a></li>
+                    <li><a href="news.html" class="nav-link">News</a></li>
+                    <li><a href="data.html" class="nav-link">Data</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+            </nav>
+            <div class="mobile-menu" id="mobileMenu">
+                <ul class="nav-list">
+                    <li><a href="about.html" class="nav-link">About</a></li>
+                    <li><a href="news.html" class="nav-link">News</a></li>
+                    <li><a href="data.html" class="nav-link">Data</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Page Header -->
+        <section style="background-color: var(--color-gray-100); padding: var(--spacing-xl) 0;">
+            <div class="container">
+                <h1 style="font-size: var(--font-size-4xl); margin-bottom: var(--spacing-sm);">Data & Analysis</h1>
+                <p style="font-size: var(--font-size-xl); color: var(--color-gray-600);">Explore insights about the digital divide and connectivity trends</p>
+            </div>
+        </section>
+
+        <!-- Lifeline Program Enrollment -->
+        <section class="container analysis-section">
+            <h2>Lifeline Program Enrollment Trends</h2>
+            <div class="viz-container">
+                <!-- Replace with actual Tableau embed code -->
+                <iframe src="https://public.tableau.com/views/LifelineEnrollmentTrends/Dashboard1?:embed=y&:display_count=yes&:origin=viz_share_link" allowfullscreen></iframe>
+            </div>
+            
+            <div class="key-findings">
+                <h4>Key Findings</h4>
+                <ul>
+                    <li>Enrollment has increased by 40% since 2020, highlighting growing need for affordable connectivity</li>
+                    <li>Rural areas show highest growth in program participation</li>
+                    <li>Broadband adoption through Lifeline has doubled in the last two years</li>
+                </ul>
+            </div>
+            
+            <h3>Understanding the Growth</h3>
+            <p>
+                The Lifeline program has seen unprecedented growth in recent years, driven by increased awareness of the digital divide and the essential nature of internet connectivity. Our analysis shows that this growth is particularly strong in rural and underserved communities, where access to affordable internet has historically been limited.
+            </p>
+            <p>
+                The data reveals a clear correlation between program expansion and improvements in digital literacy and economic opportunities in participating communities. This suggests that the Lifeline program is not just providing connectivity but also contributing to broader social and economic development.
+            </p>
+        </section>
+
+        <!-- Digital Divide Analysis -->
+        <section class="container analysis-section">
+            <h2>Mapping the Digital Divide</h2>
+            <div class="viz-container">
+                <!-- Replace with actual Tableau embed code -->
+                <iframe src="https://public.tableau.com/views/DigitalDivideMap/Dashboard1?:embed=y&:display_count=yes&:origin=viz_share_link" allowfullscreen></iframe>
+            </div>
+            
+            <div class="key-findings">
+                <h4>Key Findings</h4>
+                <ul>
+                    <li>Significant gaps in broadband access persist in rural and tribal areas</li>
+                    <li>Urban areas show higher adoption rates but face affordability challenges</li>
+                    <li>Correlation between income levels and internet access remains strong</li>
+                </ul>
+            </div>
+            
+            <h3>Regional Disparities</h3>
+            <p>
+                Our analysis of the digital divide reveals complex patterns of connectivity across different regions. While urban areas generally have better infrastructure, affordability remains a significant barrier. In contrast, rural areas face both infrastructure and affordability challenges, creating a double barrier to digital inclusion.
+            </p>
+            <p>
+                The data also shows that tribal lands and certain rural communities face unique challenges, often requiring specialized solutions and targeted support. Understanding these regional variations is crucial for developing effective strategies to bridge the digital divide.
+            </p>
+        </section>
+
+        <!-- Service Provider Analysis -->
+        <section class="container analysis-section">
+            <h2>Service Provider Coverage & Plans</h2>
+            <div class="viz-container">
+                <!-- Replace with actual Tableau embed code -->
+                <iframe src="https://public.tableau.com/views/ServiceProviderAnalysis/Dashboard1?:embed=y&:display_count=yes&:origin=viz_share_link" allowfullscreen></iframe>
+            </div>
+            
+            <div class="key-findings">
+                <h4>Key Findings</h4>
+                <ul>
+                    <li>Over 50 providers now offer Lifeline-compatible plans</li>
+                    <li>Average monthly savings for participants is $30-40</li>
+                    <li>Broadband speeds have improved significantly in the last year</li>
+                </ul>
+            </div>
+            
+            <h3>Provider Landscape</h3>
+            <p>
+                The Lifeline program's provider landscape has evolved significantly, with more options available to consumers than ever before. Our analysis shows that competition among providers has led to better service quality and more affordable plans, benefiting program participants.
+            </p>
+            <p>
+                The data also reveals interesting patterns in provider coverage and plan offerings, with some providers focusing on specific regions or types of service. This diversity in the market allows consumers to find plans that best match their needs and location.
+            </p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__grid">
+                <div>
+                    <h3 class="footer__title">Lifeline Connect</h3>
+                    <p>Helping eligible households access affordable connectivity solutions.</p>
+                </div>
+                <div>
+                    <h3 class="footer__title">Quick Links</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><a href="about.html" class="footer__link">About Us</a></li>
+                        <li><a href="news.html" class="footer__link">News</a></li>
+                        <li><a href="data.html" class="footer__link">Data</a></li>
+                        <li><a href="contact.html" class="footer__link">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer__title">Contact Us</h3>
+                    <p>Email: info@lifelineconnect.org</p>
+                    <p>Phone: (555) 123-4567</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: var(--spacing-xl); padding-top: var(--spacing-lg); border-top: 1px solid var(--color-gray-700);">
+                <p>&copy; <span id="copyrightYear">2025</span> Lifeline Connect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html> 
