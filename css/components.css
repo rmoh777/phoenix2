@@ -56,10 +56,9 @@
 .nav {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   padding: var(--spacing-md) 0;
   position: relative;
-  gap: var(--spacing-xl);
 }
 
 .header-logo {
@@ -70,19 +69,19 @@
 }
 
 .logo-ga {
-  color: var(--color-primary);
-  font-size: 2rem;
+  color: #3498db;
+  font-size: 28px;
   font-weight: bold;
   line-height: 1;
-  font-family: 'Inter', Arial, sans-serif;
+  font-family: Arial, sans-serif;
 }
 
 .logo-connects {
-  color: var(--color-gray-900);
-  font-size: 1rem;
+  color: #fff;
+  font-size: 14px;
   font-weight: bold;
   letter-spacing: 1px;
-  font-family: 'Inter', Arial, sans-serif;
+  font-family: Arial, sans-serif;
 }
 
 @media (max-width: 600px) {
