@@ -66,5 +66,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Contact
 
-- Email: info@lifelineconnect.org
-- Phone: (555) 123-4567 
+- Email: gaconnectsyou@gmail.com 
