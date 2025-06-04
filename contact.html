@@ -64,16 +64,64 @@
             </div>
         </section>
 
-        <!-- Contact Form Placeholder -->
+        <!-- Contact Form -->
         <section class="container" style="margin: var(--spacing-2xl) 0;">
             <div class="card">
                 <h2 style="font-size: var(--font-size-3xl); margin-bottom: var(--spacing-lg);">Send Us a Message</h2>
-                <p style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-lg);">
-                    Our contact form is coming soon. In the meantime, please reach out to us via email or phone using the contact information above.
-                </p>
-                <div style="background-color: var(--color-gray-100); padding: var(--spacing-xl); border-radius: var(--border-radius); text-align: center;">
-                    <p style="color: var(--color-gray-600);">Contact form coming soon...</p>
-                </div>
+                <form
+                    action="https://formspree.io/f/xeokokjn"
+                    method="POST"
+                    style="display: flex; flex-direction: column; gap: var(--spacing-md);"
+                >
+                    <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+                        <label for="name" style="font-weight: 500;">Name:</label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            required
+                            style="padding: var(--spacing-sm); border: 1px solid var(--color-gray-300); border-radius: var(--border-radius); font-size: var(--font-size-base);"
+                        >
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+                        <label for="email" style="font-weight: 500;">
+                            Email Address: <span style="color: var(--color-error);">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            required
+                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                            title="Please enter a valid email address (e.g., name@domain.com)"
+                            placeholder="Enter your email address"
+                            style="padding: var(--spacing-sm); border: 1px solid var(--color-gray-300); border-radius: var(--border-radius); font-size: var(--font-size-base);"
+                        >
+                        <small style="color: var(--color-gray-600); font-size: var(--font-size-sm);">Please enter a valid email address (required)</small>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+                        <label for="message" style="font-weight: 500;">Comment/Question:</label>
+                        <textarea 
+                            id="message" 
+                            name="message" 
+                            required
+                            maxlength="2000"
+                            style="padding: var(--spacing-sm); border: 1px solid var(--color-gray-300); border-radius: var(--border-radius); font-size: var(--font-size-base); min-height: 150px; resize: vertical;"
+                        ></textarea>
+                        <small style="color: var(--color-gray-600); font-size: var(--font-size-sm);">Maximum 2000 characters</small>
+                        <div id="charCount" style="color: var(--color-gray-600); font-size: var(--font-size-sm); text-align: right;">0/2000 characters</div>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="btn btn--primary"
+                        style="align-self: flex-start; margin-top: var(--spacing-md);"
+                    >
+                        Send Message
+                    </button>
+                </form>
             </div>
         </section>
     </main>
@@ -105,5 +153,33 @@
     </footer>
 
     <script src="js/main.js"></script>
+    <script>
+        // Add character counter for the message textarea
+        const messageTextarea = document.getElementById('message');
+        const charCount = document.getElementById('charCount');
+
+        messageTextarea.addEventListener('input', function() {
+            const remaining = this.value.length;
+            charCount.textContent = `${remaining}/2000 characters`;
+            
+            // Change color when approaching limit
+            if (remaining > 1800) {
+                charCount.style.color = 'var(--color-warning)';
+            } else {
+                charCount.style.color = 'var(--color-gray-600)';
+            }
+        });
+
+        // Add email validation
+        const emailInput = document.getElementById('email');
+        emailInput.addEventListener('input', function() {
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(this.value)) {
+                this.setCustomValidity('Please enter a valid email address');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    </script>
 </body>
 </html> 
