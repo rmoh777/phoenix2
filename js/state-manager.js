@@ -128,6 +128,14 @@ class StateManager {
     }
 
     /**
+     * Get the preferences object
+     * @returns {Object} Preferences state
+     */
+    getPreferences() {
+        return this.state.preferences;
+    }
+
+    /**
      * Update priorities based on selected preferences
      */
     updatePriorities() {
