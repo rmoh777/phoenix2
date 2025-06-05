@@ -35,6 +35,9 @@ class InterviewController {
         this.isMobile = window.innerWidth <= 768;
         this.touchStartX = 0;
         this.touchEndX = 0;
+        
+        // Initialize the UI to show the first step
+        this.showStep('state');
     }
 
     /**
@@ -42,9 +45,9 @@ class InterviewController {
      */
     initializeElements() {
         // Step containers
-        this.step1Container = document.getElementById('step1');
-        this.step2Container = document.getElementById('step2');
-        this.step3Container = document.getElementById('step3');
+        this.stepState = document.getElementById('step-state');
+        this.stepPreferences = document.getElementById('step-preferences');
+        this.stepResults = document.getElementById('step-results');
         
         // State selection
         this.stateSelect = document.getElementById('stateSelect');
@@ -59,8 +62,8 @@ class InterviewController {
         this.textInputError = document.getElementById('textInputError');
         
         // Navigation buttons
-        this.nextButtons = document.querySelectorAll('.next-btn');
-        this.backButtons = document.querySelectorAll('.back-btn');
+        this.nextBtn = document.getElementById('nextBtn');
+        this.prevBtn = document.getElementById('prevBtn');
         
         // Results container
         this.resultsContainer = document.getElementById('resultsContainer');
@@ -68,7 +71,13 @@ class InterviewController {
         // Loading indicator
         this.loadingIndicator = document.getElementById('loadingIndicator');
 
-        // Initialize state dropdown
+        // Check if elements exist before proceeding
+        if (!this.stateSelect) {
+            console.error('State select element not found');
+            return;
+        }
+
+        // Populate state dropdown
         this.populateStateDropdown();
         
         // Restore previous preferences if they exist
@@ -99,25 +108,13 @@ class InterviewController {
      * Bind event handlers
      */
     bindEvents() {
-        // State selection
         this.stateSelect.addEventListener('change', () => this.handleStateSelection());
-        
-        // Preference buttons
         this.preferenceButtons.forEach(button => {
             button.addEventListener('click', () => this.handlePreferenceSelection(button));
         });
-        
-        // Text input
         this.preferencesText.addEventListener('input', () => this.handleTextInput());
-        
-        // Navigation buttons
-        this.nextButtons.forEach(button => {
-            button.addEventListener('click', () => this.handleNext(button));
-        });
-        
-        this.backButtons.forEach(button => {
-            button.addEventListener('click', () => this.handleBack(button));
-        });
+        this.nextBtn.addEventListener('click', () => this.handleNext());
+        this.prevBtn.addEventListener('click', () => this.handleBack());
     }
 
     /**
@@ -125,37 +122,26 @@ class InterviewController {
      */
     handleStateSelection() {
         const state = this.stateSelect.value;
-        
-        // Clear previous error
         this.stateError.textContent = '';
-        
-        // Validate state selection
         if (!state) {
             this.stateError.textContent = 'Please select a state';
             this.stateSelect.classList.add('error');
             return;
         }
+        this.stateSelect.classList.remove('error');
+        this.stateSelect.classList.add('selected');
+        this.state = state;
         
-        // Update state manager
-        if (this.stateManager.setSelectedState(state)) {
-            // Update UI
-            this.stateSelect.classList.remove('error');
-            this.stateSelect.classList.add('selected');
-            
-            // Update available providers
-            const availableProviders = this.stateManager.getAvailableProviders();
-            this.updateProviderAvailability(availableProviders);
-            
-            // Track analytics
-            this.analytics.trackStateSelection(state);
-            this.stateManager.recordInteraction('state_selection', { state });
-            
-            // Update UI state
-            this.updateUI();
-        } else {
-            this.stateError.textContent = 'Invalid state selection';
-            this.stateSelect.classList.add('error');
-        }
+        // Update StateManager with selected state
+        this.stateManager.setSelectedState(state);
+        
+        // Track state selection
+        this.analytics.trackEvent('state_selected', {
+            state: state
+        });
+        
+        // Update UI
+        this.updateUI();
     }
 
     /**
@@ -176,68 +162,94 @@ class InterviewController {
      */
     populateStateDropdown() {
         const states = [
-            'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
-            'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
-            'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
-            'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
-            'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY',
-            'DC'
+            { code: 'AL', name: 'Alabama' },
+            { code: 'AK', name: 'Alaska' },
+            { code: 'AZ', name: 'Arizona' },
+            { code: 'AR', name: 'Arkansas' },
+            { code: 'CA', name: 'California' },
+            { code: 'CO', name: 'Colorado' },
+            { code: 'CT', name: 'Connecticut' },
+            { code: 'DE', name: 'Delaware' },
+            { code: 'FL', name: 'Florida' },
+            { code: 'GA', name: 'Georgia' },
+            { code: 'HI', name: 'Hawaii' },
+            { code: 'ID', name: 'Idaho' },
+            { code: 'IL', name: 'Illinois' },
+            { code: 'IN', name: 'Indiana' },
+            { code: 'IA', name: 'Iowa' },
+            { code: 'KS', name: 'Kansas' },
+            { code: 'KY', name: 'Kentucky' },
+            { code: 'LA', name: 'Louisiana' },
+            { code: 'ME', name: 'Maine' },
+            { code: 'MD', name: 'Maryland' },
+            { code: 'MA', name: 'Massachusetts' },
+            { code: 'MI', name: 'Michigan' },
+            { code: 'MN', name: 'Minnesota' },
+            { code: 'MS', name: 'Mississippi' },
+            { code: 'MO', name: 'Missouri' },
+            { code: 'MT', name: 'Montana' },
+            { code: 'NE', name: 'Nebraska' },
+            { code: 'NV', name: 'Nevada' },
+            { code: 'NH', name: 'New Hampshire' },
+            { code: 'NJ', name: 'New Jersey' },
+            { code: 'NM', name: 'New Mexico' },
+            { code: 'NY', name: 'New York' },
+            { code: 'NC', name: 'North Carolina' },
+            { code: 'ND', name: 'North Dakota' },
+            { code: 'OH', name: 'Ohio' },
+            { code: 'OK', name: 'Oklahoma' },
+            { code: 'OR', name: 'Oregon' },
+            { code: 'PA', name: 'Pennsylvania' },
+            { code: 'RI', name: 'Rhode Island' },
+            { code: 'SC', name: 'South Carolina' },
+            { code: 'SD', name: 'South Dakota' },
+            { code: 'TN', name: 'Tennessee' },
+            { code: 'TX', name: 'Texas' },
+            { code: 'UT', name: 'Utah' },
+            { code: 'VT', name: 'Vermont' },
+            { code: 'VA', name: 'Virginia' },
+            { code: 'WA', name: 'Washington' },
+            { code: 'WV', name: 'West Virginia' },
+            { code: 'WI', name: 'Wisconsin' },
+            { code: 'WY', name: 'Wyoming' },
+            { code: 'DC', name: 'District of Columbia' }
         ];
-
-        // Clear existing options
+        
+        // Clear existing options and add the default option
         this.stateSelect.innerHTML = '<option value="">Select your state</option>';
         
-        // Add state options
+        // Add all states
         states.forEach(state => {
             const option = document.createElement('option');
-            option.value = state;
-            option.textContent = state;
+            option.value = state.code;
+            option.textContent = state.name;
             this.stateSelect.appendChild(option);
         });
-
-        // Restore previous selection if exists
-        const savedState = this.stateManager.getSelectedState();
-        if (savedState) {
-            this.stateSelect.value = savedState;
-            this.stateSelect.classList.add('selected');
-        }
     }
 
     /**
      * Update UI based on current state
      */
     updateUI() {
-        const currentStep = this.stateManager.getCurrentStep();
         const selectedState = this.stateManager.getSelectedState();
-        const preferences = this.stateManager.getPreferences();
         
         // Update next button state
-        this.nextButtons.forEach(button => {
-            const step = parseInt(button.dataset.step);
-            if (step === 1) {
-                button.disabled = !selectedState;
-            } else if (step === 2) {
-                // Enable next button if there are any preferences
-                const hasPreferences = preferences.selectedButtons.length > 0 || preferences.freeFormText.trim().length > 0;
-                button.disabled = !hasPreferences;
-            }
-        });
+        this.nextBtn.disabled = !selectedState;
         
         // Update progress indicator
-        this.updateProgressIndicator(currentStep);
-        
-        // Update preference buttons state
-        this.updatePreferenceButtonsState();
+        this.updateProgressIndicator();
     }
 
     /**
      * Update progress indicator
-     * @param {number} currentStep - Current step number
      */
-    updateProgressIndicator(currentStep) {
+    updateProgressIndicator() {
+        const steps = ['state', 'preferences', 'results'];
+        const currentStepIndex = steps.indexOf(this.currentStep);
+        
         document.querySelectorAll('.progress-step').forEach((step, index) => {
-            step.classList.toggle('active', index + 1 === currentStep);
-            step.classList.toggle('completed', index + 1 < currentStep);
+            step.classList.toggle('active', index === currentStepIndex);
+            step.classList.toggle('completed', index < currentStepIndex);
         });
     }
 
@@ -285,187 +297,68 @@ class InterviewController {
 
     /**
      * Handle next button click
-     * @param {HTMLElement} button - Clicked button
      */
-    async handleNext(button) {
-        const currentStep = this.stateManager.getCurrentStep();
-        
-        // Validate current step
-        if (!this.validateStep(currentStep)) {
-            this.showError(`Please complete all required fields in step ${currentStep}`);
-            return;
-        }
-        
-        // Record step completion
-        document.getElementById('prevBtn').addEventListener('click', () => this.previousStep());
-        document.getElementById('nextBtn').addEventListener('click', () => this.nextStep());
-        document.getElementById('restartBtn').addEventListener('click', () => this.restart());
-
-        // State selection
-        document.getElementById('stateSelect').addEventListener('change', (e) => {
-            this.stateManager.setSelectedState(e.target.value);
-        });
-
-        // Preference buttons
-        document.querySelectorAll('.preference-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const preference = e.target.dataset.preference;
-                if (e.target.classList.contains('selected')) {
-                    e.target.classList.remove('selected');
-                    this.stateManager.removePreference(preference);
-                } else {
-                    e.target.classList.add('selected');
-                    this.stateManager.addPreference(preference);
-                }
-            });
-        });
-
-        // Free form text
-        document.getElementById('customPreferences').addEventListener('input', (e) => {
-            this.stateManager.setFreeFormText(e.target.value);
-        });
-    }
-
-    /**
-     * Show a specific step
-     * @param {number} step - Step number to show
-     */
-    showStep(step) {
-        // Hide all steps
-        document.querySelectorAll('.interview-step').forEach(el => {
-            el.classList.remove('active');
-        });
-
-        // Show selected step
-        document.getElementById(`step-${this.getStepName(step)}`).classList.add('active');
-
-        // Update progress indicator
-        document.querySelectorAll('.progress-step').forEach((el, index) => {
-            el.classList.toggle('active', index + 1 === step);
-        });
-
-        // Update navigation buttons
-        this.updateNavigationButtons(step);
-
-        // Record step time
-        this.stateManager.recordStepTime(step);
-    }
-
-    /**
-     * Get step name from step number
-     * @param {number} step - Step number
-     * @returns {string} Step name
-     */
-    getStepName(step) {
-        const stepNames = ['state', 'preferences', 'results'];
-        return stepNames[step - 1];
-    }
-
-    /**
-     * Update navigation buttons based on current step
-     * @param {number} step - Current step
-     */
-    updateNavigationButtons(step) {
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-
-        prevBtn.style.display = step === 1 ? 'none' : 'block';
-        nextBtn.style.display = step === this.totalSteps ? 'none' : 'block';
-        nextBtn.textContent = step === this.totalSteps - 1 ? 'Get Results' : 'Next';
-    }
-
-    /**
-     * Move to the next step
-     */
-    nextStep() {
-        if (this.validateCurrentStep()) {
-            const nextStep = this.currentStep + 1;
-            if (nextStep <= this.totalSteps) {
-                this.currentStep = nextStep;
-                this.stateManager.setCurrentStep(nextStep);
-                this.showStep(nextStep);
-
-                // If moving to results, fetch recommendations
-                if (nextStep === this.totalSteps) {
-                    this.processRecommendations();
-                }
+    handleNext() {
+        if (this.stepState.classList.contains('active')) {
+            if (!this.stateSelect.value) {
+                this.stateError.textContent = 'Please select a state';
+                this.stateSelect.classList.add('error');
+                return;
+            }
+            this.stateError.textContent = '';
+            this.stateSelect.classList.remove('error');
+            this.showStep('preferences');
+        } else if (this.stepPreferences.classList.contains('active')) {
+            // Validate preferences before proceeding
+            if (this.validatePreferences()) {
+                this.showStep('results');
+                // Fetch recommendations when showing results
+                this.processRecommendations();
             }
         }
     }
 
     /**
-     * Move to the previous step
+     * Handle back button click
      */
-    previousStep() {
-        if (this.currentStep > 1) {
-            this.currentStep--;
-            this.stateManager.setCurrentStep(this.currentStep);
-            this.showStep(this.currentStep);
+    handleBack() {
+        if (this.stepPreferences.classList.contains('active')) {
+            this.showStep('state');
+        } else if (this.stepResults.classList.contains('active')) {
+            this.showStep('preferences');
         }
     }
 
     /**
-     * Restart the interview
+     * Show a specific step
+     * @param {string} step - Step name to show
      */
-    restart() {
-        this.stateManager.resetState();
-        this.currentStep = 1;
-        this.showStep(1);
-    }
-
-    /**
-     * Validate the current step
-     * @returns {boolean} Whether the step is valid
-     */
-    validateCurrentStep() {
-        switch (this.currentStep) {
-            case 1:
-                return this.validateStateSelection();
-            case 2:
-                return this.validatePreferences();
-            default:
-                return true;
-        }
-    }
-
-    /**
-     * Validate state selection
-     * @returns {boolean} Whether state is selected
-     */
-    validateStateSelection() {
-        const state = this.stateManager.getState().selectedState;
-        if (!state) {
-            alert('Please select your state to continue.');
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Validate preferences
-     * @returns {boolean} Whether preferences are valid
-     */
-    validatePreferences() {
-        const preferences = this.stateManager.getPreferences();
-        let isValid = true;
+    showStep(step) {
+        this.stepState.classList.remove('active');
+        this.stepPreferences.classList.remove('active');
+        this.stepResults.classList.remove('active');
         
-        // Check if there are any preferences
-        if (preferences.selectedButtons.length === 0 && preferences.freeFormText.trim().length === 0) {
-            this.preferencesError.textContent = 'Please select at least one preference or enter your requirements';
-            isValid = false;
-        } else {
-            this.preferencesError.textContent = '';
+        if (step === 'state') {
+            this.stepState.classList.add('active');
+            this.currentStep = 'state';
+            this.prevBtn.style.display = 'none';
+            this.nextBtn.style.display = 'block';
+            this.nextBtn.textContent = 'Next';
+        } else if (step === 'preferences') {
+            this.stepPreferences.classList.add('active');
+            this.currentStep = 'preferences';
+            this.prevBtn.style.display = 'block';
+            this.nextBtn.style.display = 'block';
+            this.nextBtn.textContent = 'Find Plans';
+        } else if (step === 'results') {
+            this.stepResults.classList.add('active');
+            this.currentStep = 'results';
+            this.prevBtn.style.display = 'block';
+            this.nextBtn.style.display = 'none';
         }
         
-        // Validate text input length
-        if (preferences.freeFormText.trim().length > 500) {
-            this.textInputError.textContent = 'Additional preferences must be 500 characters or less';
-            isValid = false;
-        } else {
-            this.textInputError.textContent = '';
-        }
-        
-        return isValid;
+        // Update progress indicator
+        this.updateProgressIndicator();
     }
 
     /**
@@ -768,9 +661,7 @@ class InterviewController {
         });
         
         // Navigation
-        this.backButtons.forEach(btn => {
-            btn.addEventListener('click', () => this.handleNavigation('prev'));
-        });
+        this.prevBtn.addEventListener('click', () => this.handleNavigation('prev'));
         
         // Window resize
         window.addEventListener('resize', this.handleResize.bind(this));
@@ -836,10 +727,8 @@ class InterviewController {
 
     addHapticFeedback() {
         // Add haptic feedback to buttons
-        this.nextButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                navigator.vibrate(50);
-            });
+        this.nextBtn.addEventListener('click', () => {
+            navigator.vibrate(50);
         });
     }
 
@@ -904,46 +793,44 @@ class InterviewController {
     validateCurrentStep() {
         switch (this.currentStep) {
             case 'state':
-                if (!this.state) {
-                    this.stateError.textContent = 'Please select your state';
-                    return false;
-                }
-                break;
-                
+                return this.validateStateSelection();
             case 'preferences':
-                if (this.preferences.size === 0) {
-                    this.preferencesError.textContent = 'Please select at least one preference';
-                    return false;
-                }
-                break;
+                return this.validatePreferences();
+            default:
+                return true;
         }
-        
+    }
+
+    validateStateSelection() {
+        const state = this.stateManager.getState().selectedState;
+        if (!state) {
+            alert('Please select your state to continue.');
+            return false;
+        }
         return true;
     }
 
-    showStep(step) {
-        // Hide all steps
-        document.querySelectorAll('.interview-step').forEach(el => {
-            el.classList.remove('active');
-        });
+    validatePreferences() {
+        const preferences = this.stateManager.getPreferences();
+        let isValid = true;
         
-        // Show selected step
-        document.getElementById(`${step}Step`).classList.add('active');
+        // Check if there are any preferences
+        if (preferences.selectedButtons.length === 0 && preferences.freeFormText.trim().length === 0) {
+            this.preferencesError.textContent = 'Please select at least one preference or enter your requirements';
+            isValid = false;
+        } else {
+            this.preferencesError.textContent = '';
+        }
         
-        // Update progress indicator
-        document.querySelectorAll('.progress-step').forEach(el => {
-            el.classList.remove('active');
-            if (el.dataset.step === step) {
-                el.classList.add('active');
-            }
-        });
+        // Validate text input length
+        if (preferences.freeFormText.trim().length > 500) {
+            this.textInputError.textContent = 'Additional preferences must be 500 characters or less';
+            isValid = false;
+        } else {
+            this.textInputError.textContent = '';
+        }
         
-        // Update navigation buttons
-        this.backButtons.forEach(btn => {
-            btn.disabled = step === 'state';
-        });
-        
-        this.currentStep = step;
+        return isValid;
     }
 
     async fetchRecommendations() {
@@ -1043,25 +930,4 @@ class InterviewController {
         }
     }
 
-    populateStates() {
-        const states = [
-            'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
-            'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia',
-            'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
-            'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland',
-            'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri',
-            'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey',
-            'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio',
-            'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina',
-            'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-            'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-        ];
-        
-        states.forEach(state => {
-            const option = document.createElement('option');
-            option.value = state;
-            option.textContent = state;
-            this.stateSelect.appendChild(option);
-        });
-    }
 } 

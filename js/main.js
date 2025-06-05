@@ -118,8 +118,9 @@ function init() {
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
 
-// Initialize the interview controller when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-    const interviewController = new InterviewController();
-    interviewController.populateStateDropdown();
+// Initialize the interview controller when the page loads (only on interview page)
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('stateSelect')) {
+        window.interviewController = new InterviewController();
+    }
 }); 
