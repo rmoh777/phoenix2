@@ -28,16 +28,15 @@ class InterviewController {
         // Initialize session
         this.initializeSession();
 
-        this.currentStep = 'state';
-        this.steps = ['state', 'preferences', 'results'];
-        this.state = '';
+        this.currentStep = 'preferences';
+        this.steps = ['preferences', 'results'];
         this.preferences = new Set();
         this.isMobile = window.innerWidth <= 768;
         this.touchStartX = 0;
         this.touchEndX = 0;
         
         // Initialize the UI to show the first step
-        this.showStep('state');
+        this.showStep('preferences');
     }
 
     /**
@@ -45,13 +44,8 @@ class InterviewController {
      */
     initializeElements() {
         // Step containers
-        this.stepState = document.getElementById('step-state');
         this.stepPreferences = document.getElementById('step-preferences');
         this.stepResults = document.getElementById('step-results');
-        
-        // State selection
-        this.stateSelect = document.getElementById('stateSelect');
-        this.stateError = document.getElementById('stateError');
         
         // Preference buttons
         this.preferenceButtons = document.querySelectorAll('.preference-btn');
@@ -71,15 +65,6 @@ class InterviewController {
         // Loading indicator
         this.loadingIndicator = document.getElementById('loadingIndicator');
 
-        // Check if elements exist before proceeding
-        if (!this.stateSelect) {
-            console.error('State select element not found');
-            return;
-        }
-
-        // Populate state dropdown
-        this.populateStateDropdown();
-        
         // Restore previous preferences if they exist
         this.restorePreferences();
     }
@@ -108,7 +93,6 @@ class InterviewController {
      * Bind event handlers
      */
     bindEvents() {
-        this.stateSelect.addEventListener('change', () => this.handleStateSelection());
         this.preferenceButtons.forEach(button => {
             button.addEventListener('click', () => this.handlePreferenceSelection(button));
         });
@@ -118,162 +102,24 @@ class InterviewController {
     }
 
     /**
-     * Handle state selection
-     */
-    handleStateSelection() {
-        const state = this.stateSelect.value;
-        this.stateError.textContent = '';
-        if (!state) {
-            this.stateError.textContent = 'Please select a state';
-            this.stateSelect.classList.add('error');
-            return;
-        }
-        this.stateSelect.classList.remove('error');
-        this.stateSelect.classList.add('selected');
-        this.state = state;
-        
-        // Update StateManager with selected state
-        this.stateManager.setSelectedState(state);
-        
-        // Track state selection
-        this.analytics.trackEvent('state_selected', {
-            state: state
-        });
-        
-        // Update UI
-        this.updateUI();
-    }
-
-    /**
-     * Update provider availability based on selected state
-     * @param {Array} providers - Available providers for the state
-     */
-    updateProviderAvailability(providers) {
-        // Update provider cards visibility
-        document.querySelectorAll('.provider-card').forEach(card => {
-            const providerId = card.dataset.providerId;
-            const isAvailable = providers.some(p => p.id === providerId);
-            card.style.display = isAvailable ? 'block' : 'none';
-        });
-    }
-
-    /**
-     * Populate the state dropdown with all US states
-     */
-    populateStateDropdown() {
-        const states = [
-            { code: 'AL', name: 'Alabama' },
-            { code: 'AK', name: 'Alaska' },
-            { code: 'AZ', name: 'Arizona' },
-            { code: 'AR', name: 'Arkansas' },
-            { code: 'CA', name: 'California' },
-            { code: 'CO', name: 'Colorado' },
-            { code: 'CT', name: 'Connecticut' },
-            { code: 'DE', name: 'Delaware' },
-            { code: 'FL', name: 'Florida' },
-            { code: 'GA', name: 'Georgia' },
-            { code: 'HI', name: 'Hawaii' },
-            { code: 'ID', name: 'Idaho' },
-            { code: 'IL', name: 'Illinois' },
-            { code: 'IN', name: 'Indiana' },
-            { code: 'IA', name: 'Iowa' },
-            { code: 'KS', name: 'Kansas' },
-            { code: 'KY', name: 'Kentucky' },
-            { code: 'LA', name: 'Louisiana' },
-            { code: 'ME', name: 'Maine' },
-            { code: 'MD', name: 'Maryland' },
-            { code: 'MA', name: 'Massachusetts' },
-            { code: 'MI', name: 'Michigan' },
-            { code: 'MN', name: 'Minnesota' },
-            { code: 'MS', name: 'Mississippi' },
-            { code: 'MO', name: 'Missouri' },
-            { code: 'MT', name: 'Montana' },
-            { code: 'NE', name: 'Nebraska' },
-            { code: 'NV', name: 'Nevada' },
-            { code: 'NH', name: 'New Hampshire' },
-            { code: 'NJ', name: 'New Jersey' },
-            { code: 'NM', name: 'New Mexico' },
-            { code: 'NY', name: 'New York' },
-            { code: 'NC', name: 'North Carolina' },
-            { code: 'ND', name: 'North Dakota' },
-            { code: 'OH', name: 'Ohio' },
-            { code: 'OK', name: 'Oklahoma' },
-            { code: 'OR', name: 'Oregon' },
-            { code: 'PA', name: 'Pennsylvania' },
-            { code: 'RI', name: 'Rhode Island' },
-            { code: 'SC', name: 'South Carolina' },
-            { code: 'SD', name: 'South Dakota' },
-            { code: 'TN', name: 'Tennessee' },
-            { code: 'TX', name: 'Texas' },
-            { code: 'UT', name: 'Utah' },
-            { code: 'VT', name: 'Vermont' },
-            { code: 'VA', name: 'Virginia' },
-            { code: 'WA', name: 'Washington' },
-            { code: 'WV', name: 'West Virginia' },
-            { code: 'WI', name: 'Wisconsin' },
-            { code: 'WY', name: 'Wyoming' },
-            { code: 'DC', name: 'District of Columbia' }
-        ];
-        
-        // Clear existing options and add the default option
-        this.stateSelect.innerHTML = '<option value="">Select your state</option>';
-        
-        // Add all states
-        states.forEach(state => {
-            const option = document.createElement('option');
-            option.value = state.code;
-            option.textContent = state.name;
-            this.stateSelect.appendChild(option);
-        });
-    }
-
-    /**
-     * Update UI based on current state
-     */
-    updateUI() {
-        const selectedState = this.stateManager.getSelectedState();
-        
-        // Update next button state
-        this.nextBtn.disabled = !selectedState;
-        
-        // Update progress indicator
-        this.updateProgressIndicator();
-    }
-
-    /**
-     * Update progress indicator
-     */
-    updateProgressIndicator() {
-        const steps = ['state', 'preferences', 'results'];
-        const currentStepIndex = steps.indexOf(this.currentStep);
-        
-        document.querySelectorAll('.progress-step').forEach((step, index) => {
-            step.classList.toggle('active', index === currentStepIndex);
-            step.classList.toggle('completed', index < currentStepIndex);
-        });
-    }
-
-    /**
      * Handle preference button selection
      * @param {HTMLElement} button - Clicked button
      */
     handlePreferenceSelection(button) {
         const preference = button.dataset.preference;
-        const isSelected = button.classList.toggle('selected');
-        
-        // Update state manager
-        if (isSelected) {
-            this.stateManager.addPreference(preference);
-            this.analytics.trackPreferenceSelection(preference, true);
-            this.stateManager.recordInteraction('preference_selected', { preference });
+        button.classList.toggle('selected');
+        if (button.classList.contains('selected')) {
+            this.preferences.add(preference);
         } else {
-            this.stateManager.removePreference(preference);
-            this.analytics.trackPreferenceSelection(preference, false);
-            this.stateManager.recordInteraction('preference_removed', { preference });
+            this.preferences.delete(preference);
         }
         
-        // Update UI state
-        this.updateUI();
+        // Track preference selection
+        this.analytics.trackEvent('preference_selected', {
+            preference: preference,
+            selected: button.classList.contains('selected')
+        });
+        this.updateUI(); // Ensure Next button state is updated
     }
 
     /**
@@ -299,86 +145,119 @@ class InterviewController {
      * Handle next button click
      */
     handleNext() {
-        if (this.stepState.classList.contains('active')) {
-            if (!this.stateSelect.value) {
-                this.stateError.textContent = 'Please select a state';
-                this.stateSelect.classList.add('error');
-                return;
-            }
-            this.stateError.textContent = '';
-            this.stateSelect.classList.remove('error');
-            this.showStep('preferences');
-        } else if (this.stepPreferences.classList.contains('active')) {
-            // Validate preferences before proceeding
-            if (this.validatePreferences()) {
+        if (this.currentStep === 'preferences') {
+            if (this.validateCurrentStep()) {
                 this.showStep('results');
-                // Fetch recommendations when showing results
                 this.processRecommendations();
             }
+        } else if (this.currentStep === 'results') {
+            // Potentially a "Finish" or "Start Over" action if needed
+            // For now, it does nothing on the results page
         }
+        
+        // Track navigation
+        this.analytics.trackEvent('navigation', {
+            direction: 'next',
+            current_step: this.currentStep
+        });
     }
 
     /**
      * Handle back button click
      */
     handleBack() {
-        if (this.stepPreferences.classList.contains('active')) {
-            this.showStep('state');
-        } else if (this.stepResults.classList.contains('active')) {
+        if (this.currentStep === 'results') {
             this.showStep('preferences');
         }
+        // No 'back' from 'preferences' as it's the first step now
+        
+        // Track navigation
+        this.analytics.trackEvent('navigation', {
+            direction: 'back',
+            current_step: this.currentStep
+        });
     }
 
     /**
-     * Show a specific step
-     * @param {string} step - Step name to show
+     * Show the specified step
+     * @param {string} step - The step to show (\`preferences\`, \`results\`)
      */
     showStep(step) {
-        this.stepState.classList.remove('active');
+        // Hide all steps
         this.stepPreferences.classList.remove('active');
         this.stepResults.classList.remove('active');
-        
-        if (step === 'state') {
-            this.stepState.classList.add('active');
-            this.currentStep = 'state';
-            this.prevBtn.style.display = 'none';
-            this.nextBtn.style.display = 'block';
-            this.nextBtn.textContent = 'Next';
-        } else if (step === 'preferences') {
+
+        // Show the target step
+        if (step === 'preferences') {
             this.stepPreferences.classList.add('active');
             this.currentStep = 'preferences';
-            this.prevBtn.style.display = 'block';
-            this.nextBtn.style.display = 'block';
-            this.nextBtn.textContent = 'Find Plans';
+            this.prevBtn.style.display = 'none'; // Hide Prev on the first step
+            this.nextBtn.style.display = 'inline-block';
+            this.nextBtn.textContent = 'Next';
         } else if (step === 'results') {
             this.stepResults.classList.add('active');
             this.currentStep = 'results';
-            this.prevBtn.style.display = 'block';
-            this.nextBtn.style.display = 'none';
+            this.prevBtn.style.display = 'inline-block';
+            this.nextBtn.style.display = 'none'; // Or "Finish", "Start Over"
         }
+        this.updateUI();
+    }
+
+    /**
+     * Update UI based on current state
+     */
+    updateUI() {
+        // Update next button state
+        this.nextBtn.disabled = false; // Preferences step is now the first, enable Next by default
         
         // Update progress indicator
         this.updateProgressIndicator();
     }
 
     /**
+     * Update progress indicator
+     */
+    updateProgressIndicator() {
+        const steps = ['preferences', 'results'];
+        const currentStepIndex = steps.indexOf(this.currentStep);
+        
+        document.querySelectorAll('.progress-step').forEach((step, index) => {
+            step.classList.toggle('active', index === currentStepIndex);
+            step.classList.toggle('completed', index < currentStepIndex);
+        });
+    }
+
+    /**
      * Process recommendations using Gemini service
      */
     async processRecommendations() {
+        const selectedPreferences = Array.from(this.preferences);
+        const freeFormText = this.preferencesText.value;
+
+        // Track recommendation request
+        this.analytics.trackEvent('recommendation_requested', {
+            preferences: selectedPreferences,
+            free_form_text: freeFormText
+        });
+
         try {
-            const state = this.stateManager.getState();
-            const geminiService = new GeminiService();
-            const results = await geminiService.getRecommendations(
-                state.selectedState,
-                state.preferences,
-                LIFELINE_PROVIDERS
-            );
-            
-            this.stateManager.setResults(results);
-            this.renderResults(results);
+            const recommendations = await this.geminiService.getRecommendations({
+                preferences: selectedPreferences,
+                freeFormText: freeFormText,
+                // state: this.stateManager.getSelectedState() // State removed
+            });
+            this.displayResults(recommendations);
+            // Track recommendation success
+            this.analytics.trackEvent('recommendation_success', {
+                num_recommendations: recommendations.length 
+            });
         } catch (error) {
-            console.error('Error getting recommendations:', error);
-            alert('Sorry, there was an error getting your recommendations. Please try again.');
+            this.handleError(error);
+            
+            // Track error
+            this.analytics.trackEvent('recommendations_error', {
+                error: error.message
+            });
         }
     }
 
@@ -791,23 +670,14 @@ class InterviewController {
     }
 
     validateCurrentStep() {
+        let isValid = true;
         switch (this.currentStep) {
-            case 'state':
-                return this.validateStateSelection();
             case 'preferences':
-                return this.validatePreferences();
-            default:
-                return true;
+                isValid = this.validatePreferences();
+                break;
+            // No 'results' validation needed for now
         }
-    }
-
-    validateStateSelection() {
-        const state = this.stateManager.getState().selectedState;
-        if (!state) {
-            alert('Please select your state to continue.');
-            return false;
-        }
-        return true;
+        return isValid;
     }
 
     validatePreferences() {
@@ -834,24 +704,25 @@ class InterviewController {
     }
 
     async fetchRecommendations() {
-        this.loadingIndicator.style.display = 'block';
-        this.resultsContainer.innerHTML = '';
-        
+        const selectedPreferences = Array.from(this.preferences);
+        const freeFormText = this.preferencesText.value;
+
+        // Track recommendation request
+        this.analytics.trackEvent('recommendation_requested', {
+            preferences: selectedPreferences,
+            free_form_text: freeFormText
+        });
+
         try {
-            const response = await this.makeApiRequest({
-                preferences: {
-                    state: this.state,
-                    preferences: Array.from(this.preferences),
-                    additionalInfo: document.getElementById('preferencesText').value
-                }
+            const recommendations = await this.geminiService.getRecommendations({
+                preferences: selectedPreferences,
+                freeFormText: freeFormText,
+                // state: this.stateManager.getSelectedState() // State removed
             });
-            
-            this.displayResults(response);
-            
-            // Track successful recommendations
-            this.analytics.trackEvent('recommendations_received', {
-                state: this.state,
-                preferenceCount: this.preferences.size
+            this.displayResults(recommendations);
+            // Track recommendation success
+            this.analytics.trackEvent('recommendation_success', {
+                num_recommendations: recommendations.length 
             });
         } catch (error) {
             this.handleError(error);
@@ -860,8 +731,6 @@ class InterviewController {
             this.analytics.trackEvent('recommendations_error', {
                 error: error.message
             });
-        } finally {
-            this.loadingIndicator.style.display = 'none';
         }
     }
 
