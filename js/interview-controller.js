@@ -94,11 +94,14 @@ class InterviewController {
      */
     bindEvents() {
         this.preferenceButtons.forEach(button => {
-            button.addEventListener('click', () => this.handlePreferenceSelection(button));
+            button.addEventListener('click', (e) => {
+                e.currentTarget = button;
+                this.handlePreferenceClick(e);
+            });
         });
         this.preferencesText.addEventListener('input', () => this.handleTextInput());
-        this.nextBtn.addEventListener('click', () => this.handleNext());
-        this.prevBtn.addEventListener('click', () => this.handleBack());
+        this.nextBtn.addEventListener('click', () => this.handleNavigation('next'));
+        this.prevBtn.addEventListener('click', () => this.handleNavigation('prev'));
     }
 
     /**
@@ -509,13 +512,16 @@ class InterviewController {
         this.updateUI();
     }
 
-    saveCurrentSession() {
-        const sessionState = {
-            currentStep: this.stateManager.getCurrentStep(),
-            selectedState: this.stateManager.getSelectedState(),
-            preferences: this.stateManager.getPreferences()
-        };
-        this.sessionManager.saveSession(sessionState);
+    saveSession() {
+        // Get preferences from StateManager instead of local Set
+        const preferences = this.stateManager.getPreferences().selectedButtons;
+        
+        this.sessionManager.saveSession({
+            currentStep: this.currentStep,
+            state: this.state,
+            preferences: preferences,
+            additionalInfo: this.preferencesText.value
+        });
     }
 
     init() {
@@ -532,12 +538,9 @@ class InterviewController {
 
     setupEventListeners() {
         // State selection
-        this.stateSelect.addEventListener('change', this.handleStateChange);
-        
-        // Preference buttons
-        this.preferenceButtons.forEach(btn => {
-            btn.addEventListener('click', this.handlePreferenceClick);
-        });
+        if (this.stateSelect) {
+            this.stateSelect.addEventListener('change', this.handleStateChange);
+        }
         
         // Navigation
         this.prevBtn.addEventListener('click', () => this.handleNavigation('prev'));
@@ -632,8 +635,12 @@ class InterviewController {
         
         if (btn.classList.contains('selected')) {
             this.preferences.add(preference);
+            // Update the StateManager
+            this.stateManager.addPreference(preference);
         } else {
             this.preferences.delete(preference);
+            // Update the StateManager
+            this.stateManager.removePreference(preference);
         }
         
         // Track preference selection
@@ -644,6 +651,9 @@ class InterviewController {
         
         // Save session
         this.saveSession();
+
+        // Update UI state
+        this.updateUI();
     }
 
     handleNavigation(direction) {
@@ -671,9 +681,11 @@ class InterviewController {
 
     validateCurrentStep() {
         let isValid = true;
+        console.log('validateCurrentStep called, current step:', this.currentStep);
         switch (this.currentStep) {
             case 'preferences':
                 isValid = this.validatePreferences();
+                console.log('validatePreferences returned:', isValid);
                 break;
             // No 'results' validation needed for now
         }
@@ -682,19 +694,24 @@ class InterviewController {
 
     validatePreferences() {
         const preferences = this.stateManager.getPreferences();
+        console.log('Current preferences state:', preferences);
+        console.log('Text input value:', this.preferencesText.value);
         let isValid = true;
         
         // Check if there are any preferences
         if (preferences.selectedButtons.length === 0 && preferences.freeFormText.trim().length === 0) {
             this.preferencesError.textContent = 'Please select at least one preference or enter your requirements';
+            console.log('Validation failed: No preferences selected and no text entered');
             isValid = false;
         } else {
             this.preferencesError.textContent = '';
+            console.log('Preferences validation passed');
         }
         
         // Validate text input length
         if (preferences.freeFormText.trim().length > 500) {
             this.textInputError.textContent = 'Additional preferences must be 500 characters or less';
+            console.log('Validation failed: Text input too long');
             isValid = false;
         } else {
             this.textInputError.textContent = '';
@@ -766,15 +783,6 @@ class InterviewController {
         });
         
         container.appendChild(resultsList);
-    }
-
-    saveSession() {
-        this.sessionManager.saveSession({
-            currentStep: this.currentStep,
-            state: this.state,
-            preferences: Array.from(this.preferences),
-            additionalInfo: document.getElementById('preferencesText').value
-        });
     }
 
     checkForExistingSession() {
