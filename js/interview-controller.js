@@ -109,9 +109,9 @@ class InterviewController {
         const preference = button.dataset.preference;
         button.classList.toggle('selected');
         if (button.classList.contains('selected')) {
-            this.preferences.add(preference);
+            this.stateManager.addPreference(preference);
         } else {
-            this.preferences.delete(preference);
+            this.stateManager.removePreference(preference);
         }
         
         // Track preference selection
@@ -231,7 +231,7 @@ class InterviewController {
      * Process recommendations using Gemini service
      */
     async processRecommendations() {
-        const selectedPreferences = Array.from(this.preferences);
+        const selectedPreferences = this.stateManager.getPreferences().selectedButtons;
         const freeFormText = this.preferencesText.value;
 
         // Track recommendation request
