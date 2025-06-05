@@ -123,7 +123,12 @@ class StateManager {
      * @returns {boolean} Whether the preference is valid
      */
     validatePreference(preference) {
-        const validPreferences = ['price', 'data', 'support', 'network', 'features'];
+        const validPreferences = [
+            'unlimited-data', 'unlimited-talk', 'unlimited-text',
+            'free-phone', 'no-contract', 'nationwide-coverage',
+            // Retaining old values in case they are used elsewhere, can be cleaned up later
+            'price', 'data', 'support', 'network', 'features'
+        ];
         return validPreferences.includes(preference);
     }
 
