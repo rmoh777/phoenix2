@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>Find Your Lifeline Plan - Georgia Connects</title>
+    
+    <!-- Favicon and Touch Icons -->
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/interview.css">
+    <link rel="stylesheet" href="css/results.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="index.html" class="header-logo" aria-label="Georgia Connects Home">
+                    <span class="logo-ga">GA</span>
+                    <span class="logo-connects">CONNECTS</span>
+                </a>
+                <ul class="nav-list">
+                    <li><a href="about.html" class="nav-link">About</a></li>
+                    <li><a href="news.html" class="nav-link">News</a></li>
+                    <li><a href="data.html" class="nav-link">Data</a></li>
+                    <li><a href="interview.html" class="nav-link active">Find Your Plan</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">☰</button>
+            </nav>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <ul class="nav-list">
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="news.html" class="nav-link">News</a></li>
+                <li><a href="data.html" class="nav-link">Data</a></li>
+                <li><a href="interview.html" class="nav-link active">Find Your Plan</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="interview-container">
+        <!-- Breadcrumb Navigation -->
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> &gt; <span>Find Your Plan</span>
+        </div>
+
+        <!-- Error Container -->
+        <div id="errorContainer" class="error-container" style="display: none;"></div>
+
+        <!-- Progress Indicator -->
+        <div class="interview-progress">
+            <div class="progress-step active">State</div>
+            <div class="progress-step">Preferences</div>
+            <div class="progress-step">Results</div>
+        </div>
+
+        <!-- Step 1: State Selection -->
+        <section id="step-state" class="interview-step active">
+            <h2>What state are you in?</h2>
+            <div class="state-selector">
+                <select id="stateSelect" class="form-control">
+                    <option value="">Select your state</option>
+                </select>
+                <div id="stateError" class="error-message"></div>
+            </div>
+        </section>
+
+        <!-- Step 2: Preferences -->
+        <section id="step-preferences" class="interview-step">
+            <h2>What are you looking for?</h2>
+            <div class="preference-buttons">
+                <button class="preference-btn" data-preference="unlimited-data">Unlimited Data</button>
+                <button class="preference-btn" data-preference="unlimited-talk">Unlimited Talk</button>
+                <button class="preference-btn" data-preference="unlimited-text">Unlimited Text</button>
+                <button class="preference-btn" data-preference="free-phone">Free Phone</button>
+                <button class="preference-btn" data-preference="no-contract">No Contract</button>
+                <button class="preference-btn" data-preference="nationwide-coverage">Nationwide Coverage</button>
+            </div>
+            <div id="preferencesError" class="error-message"></div>
+            
+            <div class="additional-preferences">
+                <h3>Additional Preferences</h3>
+                <textarea id="preferencesText" placeholder="Tell us more about what you're looking for..."></textarea>
+                <div id="textInputError" class="error-message"></div>
+            </div>
+        </section>
+
+        <!-- Step 3: Results -->
+        <section id="step-results" class="interview-step">
+            <h2>Your Recommended Plans</h2>
+            <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+                <div class="spinner"></div>
+                <p>Finding the best plans for you...</p>
+            </div>
+            <div id="resultsContainer"></div>
+            <button id="restartBtn" class="btn btn--secondary">Start Over</button>
+        </section>
+
+        <!-- Navigation -->
+        <div class="interview-nav">
+            <button id="prevBtn" class="btn btn--secondary">Previous</button>
+            <button id="nextBtn" class="btn btn--primary">Next</button>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__grid">
+                <div>
+                    <h3 class="footer__title">Georgia Connects</h3>
+                    <p>Helping households access affordable connectivity solutions.</p>
+                </div>
+                <div>
+                    <h3 class="footer__title">Quick Links</h3>
+                    <ul>
+                        <li><a href="about.html" class="footer__link">About Us</a></li>
+                        <li><a href="news.html" class="footer__link">News</a></li>
+                        <li><a href="contact.html" class="footer__link">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer__title">Contact Us</h3>
+                    <p>Email: gaconnectsyou@gmail.com</p>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <p>&copy; <span id="copyrightYear">2025</span> Georgia Connects. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/lifeline-providers.js"></script>
+    <script src="js/interview-controller.js"></script>
+    <script src="js/state-manager.js"></script>
+    <script src="js/gemini-service.js"></script>
+    <script src="js/results-renderer.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/session-manager.js"></script>
+    <script src="config/api-config.js"></script>
+</body>
+</html> 

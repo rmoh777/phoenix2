@@ -1,0 +1,515 @@
+/* Interview Layout */
+.interview-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Breadcrumb Navigation */
+.breadcrumb {
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.breadcrumb a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb span {
+    color: var(--text-secondary);
+}
+
+/* Progress Indicator */
+.interview-progress {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    position: relative;
+    padding: 0 1rem;
+}
+
+.interview-progress::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--border-color);
+    z-index: 1;
+}
+
+.progress-step {
+    position: relative;
+    z-index: 2;
+    background: var(--background-color);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 2px solid var(--border-color);
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.progress-step.active {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Interview Steps */
+.interview-step {
+    display: none;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+}
+
+.interview-step.active {
+    display: block;
+}
+
+.interview-step h2 {
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+/* State Selection */
+.state-selector {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.state-selector select {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--background-color);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.5rem;
+}
+
+.state-selector select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.state-selector select.selected {
+    border-color: var(--color-primary);
+    background-color: rgba(37, 99, 235, 0.05);
+}
+
+.state-selector select.error {
+    border-color: var(--color-error);
+}
+
+.error-message {
+    color: var(--error-color);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+/* Progress Indicator */
+.progress-indicator {
+    display: flex;
+    justify-content: center;
+    margin: var(--spacing-lg) 0;
+}
+
+.progress-step {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--color-gray-200);
+    margin: 0 var(--spacing-xs);
+    transition: background-color var(--transition-base);
+}
+
+.progress-step.active {
+    background-color: var(--color-primary);
+}
+
+.progress-step.completed {
+    background-color: var(--color-success);
+}
+
+/* Navigation Buttons */
+.interview-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+    position: sticky;
+    bottom: 0;
+    background: var(--background-color);
+    z-index: 10;
+}
+
+.interview-nav button {
+    min-width: 120px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.navigation-buttons button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.navigation-buttons .next-btn {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.navigation-buttons .next-btn:hover:not(:disabled) {
+    background-color: var(--color-primary-dark);
+}
+
+.navigation-buttons .back-btn {
+    background-color: var(--color-gray-100);
+    color: var(--color-gray-700);
+}
+
+.navigation-buttons .back-btn:hover:not(:disabled) {
+    background-color: var(--color-gray-200);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .interview-container {
+        margin: 1rem auto;
+        padding: 0;
+    }
+
+    .interview-progress {
+        padding: 0 0.5rem;
+    }
+
+    .progress-step {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .interview-step {
+        padding: 0 1rem;
+    }
+
+    .interview-step h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+
+    .preference-buttons {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .preference-btn {
+        padding: 0.875rem;
+        font-size: 0.95rem;
+    }
+
+    .interview-nav {
+        padding: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    .interview-nav button {
+        min-width: 100px;
+        padding: 0.625rem 1.25rem;
+        font-size: 0.95rem;
+    }
+
+    #preferencesText {
+        min-height: 80px;
+        font-size: 0.95rem;
+    }
+
+    .spinner {
+        width: 32px;
+        height: 32px;
+        border-width: 3px;
+    }
+
+    /* Improve touch targets */
+    button, 
+    select, 
+    .preference-btn {
+        min-height: 44px;
+    }
+
+    /* Prevent zoom on input focus */
+    input, 
+    select, 
+    textarea {
+        font-size: 16px;
+    }
+
+    /* Add pull-to-refresh visual feedback */
+    .interview-container {
+        overscroll-behavior-y: contain;
+    }
+
+    /* Improve scrolling performance */
+    .interview-step {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .interview-container {
+        margin: 1.5rem auto;
+    }
+
+    .preference-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Preferences Section */
+.preference-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.preference-btn {
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--background-color);
+    color: var(--text-primary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.preference-btn:hover,
+.preference-btn:focus {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    outline: none;
+}
+
+.preference-btn.selected {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* Additional Preferences */
+.additional-preferences {
+    margin-top: 2rem;
+}
+
+.additional-preferences h3 {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+#preferencesText {
+    width: 100%;
+    min-height: 100px;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+    text-align: center;
+    padding: 2rem;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-color);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Results Section */
+#step-results {
+    text-align: center;
+    padding: var(--spacing-xl) 0;
+}
+
+#step-results h2 {
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-gray-900);
+    font-size: var(--font-size-2xl);
+}
+
+#resultsContainer {
+    margin-top: 2rem;
+}
+
+/* Active Navigation Link */
+.nav-link.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Error Container */
+.error-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 90%;
+    max-width: 600px;
+    animation: slideDown 0.3s ease-out;
+}
+
+.error-message {
+    display: flex;
+    align-items: flex-start;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius);
+    background-color: var(--color-white);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid var(--color-error);
+}
+
+.error-message.warning {
+    border-left-color: var(--color-warning);
+}
+
+.error-message.info {
+    border-left-color: var(--color-info);
+}
+
+.error-message.success {
+    border-left-color: var(--color-success);
+}
+
+.error-icon {
+    font-size: 24px;
+    margin-right: var(--spacing-sm);
+    flex-shrink: 0;
+}
+
+.error-content {
+    flex-grow: 1;
+}
+
+.error-content h3 {
+    margin: 0 0 var(--spacing-xs);
+    color: var(--color-gray-900);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+}
+
+.error-content p {
+    margin: 0 0 var(--spacing-sm);
+    color: var(--color-gray-700);
+    font-size: var(--font-size-base);
+}
+
+.error-action {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color var(--transition-base);
+}
+
+.error-action:hover {
+    background-color: var(--color-primary-dark);
+}
+
+@keyframes slideDown {
+    from {
+        transform: translate(-50%, -100%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
+
+/* Field-level error states */
+.form-control.error {
+    border-color: var(--color-error);
+    background-color: var(--color-error-light);
+}
+
+.form-control.error:focus {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Focus States */
+:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .spinner {
+        animation: none;
+    }
+
+    .preference-btn,
+    .interview-nav button {
+        transition: none;
+    }
+} 
