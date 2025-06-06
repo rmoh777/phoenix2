@@ -25,10 +25,15 @@ async function getRecommendations() {
 
         const recommendationResponse = await callGeminiAPI(recommendationPrompt, 0.2, 100);
         
+        // Defensive check before using .trim()
+        if (typeof recommendationResponse !== 'string') {
+            throw new Error('No recommendation response from API');
+        }
+        
         // Parse the plan IDs and ranks
         const planMatches = recommendationResponse.trim().split(',').map(item => {
             const [id, rank] = item.split(':');
-            return { id: parseInt(id.trim()), rank: rank.trim() };
+            return { id: parseInt(id?.trim()), rank: rank?.trim() };
         });
 
         // Get the actual plan data
@@ -65,6 +70,11 @@ OVERALL_SUMMARY:
 [Your summary here]`;
 
         const explanationResponse = await callGeminiAPI(explanationPrompt, 0.7, 500);
+        
+        // Defensive check before using .trim() or parsing
+        if (typeof explanationResponse !== 'string') {
+            throw new Error('No explanation response from API');
+        }
         
         // Parse the explanations
         const explanations = parseExplanations(explanationResponse);
