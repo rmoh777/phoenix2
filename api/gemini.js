@@ -1,7 +1,5 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-
-// Initialize the Gemini API with your API key
-const genAI = new GoogleGenerativeAI(process.env.GeminiAPI);
+// Direct Gemini API integration
+import fetch from 'node-fetch';
 
 module.exports = async (req, res) => {
     // Set CORS headers
@@ -34,24 +32,53 @@ module.exports = async (req, res) => {
             return;
         }
 
-        // Get the model
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-        // Generate content
-        const result = await model.generateContent({
-            contents: [{ role: "user", parts: [{ text: prompt }] }],
-            generationConfig: {
-                temperature,
-                maxOutputTokens,
+        // Use the API key from the config
+        const apiKey = process.env.GeminiAPI || 'AIzaSyBZpY3-IjZCgxF0a-nQ6Ovs4Pz6N6z1UM0'; // Fallback to config value
+        
+        // Direct call to the Google Generative AI API
+        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-goog-api-key': apiKey
             },
+            body: JSON.stringify({
+                contents: [
+                    {
+                        parts: [
+                            {
+                                text: prompt
+                            }
+                        ]
+                    }
+                ],
+                generationConfig: {
+                    temperature,
+                    maxOutputTokens,
+                    topP: 0.8,
+                    topK: 40
+                }
+            })
         });
 
-        const response = await result.response;
-        const text = response.text();
+        if (!response.ok) {
+            const errorData = await response.text();
+            console.error('API Error Response:', errorData);
+            throw new Error(`API request failed with status ${response.status}: ${errorData}`);
+        }
 
+        const data = await response.json();
+        
+        // Extract the text from the response
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        
         res.status(200).json({ text });
     } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Internal server error', details: error.message });
+        console.error('Error processing request:', error);
+        res.status(500).json({ 
+            error: 'Internal server error', 
+            details: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
 }; 
