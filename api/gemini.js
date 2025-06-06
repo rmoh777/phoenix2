@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
-    const genAI = new GoogleGenerativeAI(process.env.GeminiAPI);
+    const genAI = new GoogleGenerativeAI(process.env.GeminiKey2);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const result = await model.generateContent({
