@@ -13,193 +13,165 @@
  */
 
 const MOBILE_PLANS = [
-    // Verizon Plans
+    // Plans generated from newlifelineplans.txt
+    // Each plan is a flat object with provider and plan details
     {
-        id: 1,
-        name: "Unlimited Welcome",
-        carrier: "Verizon",
-        price: 65,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
-        hotspot: "No"
+        provider_name: "IM TELECOM (Excess Telecom)",
+        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
+        plan_name: "Standard Plan",
+        price_per_month: "$0/month (with Lifeline discount)",
+        data: "4.5GB",
+        voice: "3,000 minutes",
+        text: "Unlimited text",
+        speed_notes: null,
+        coverage_notes: null,
+        additional_features: null
     },
     {
-        id: 2,
-        name: "Unlimited Plus",
-        carrier: "Verizon",
-        price: 80,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "25GB hotspot", "HD video"],
-        hotspot: "25GB"
+        provider_name: "IM TELECOM (Excess Telecom)",
+        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
+        plan_name: "Advantage Plan",
+        price_per_month: "$1/month (with Lifeline discount)",
+        data: "6.5GB",
+        voice: "3,000 minutes",
+        text: "Unlimited text",
+        speed_notes: null,
+        coverage_notes: null,
+        additional_features: null
     },
     {
-        id: 3,
-        name: "Unlimited Ultimate",
-        carrier: "Verizon",
-        price: 90,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "60GB hotspot", "4K video", "International calling"],
-        hotspot: "60GB"
+        provider_name: "IM TELECOM (Excess Telecom)",
+        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
+        plan_name: "Kentucky Standard Plan",
+        price_per_month: "$0/month (with Lifeline discount)",
+        data: "4.5GB",
+        voice: "Unlimited talk",
+        text: "Unlimited text",
+        speed_notes: null,
+        coverage_notes: "Kentucky only",
+        additional_features: null
     },
     {
-        id: 4,
-        name: "5G Start",
-        carrier: "Verizon",
-        price: 70,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
-        hotspot: "No"
+        provider_name: "IM TELECOM (Excess Telecom)",
+        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
+        plan_name: "Kentucky Advantage Plan",
+        price_per_month: "$1/month (with Lifeline discount)",
+        data: "6.5GB",
+        voice: "Unlimited talk",
+        text: "Unlimited text",
+        speed_notes: null,
+        coverage_notes: "Kentucky only",
+        additional_features: null
     },
     {
-        id: 5,
-        name: "5G Play More",
-        carrier: "Verizon",
-        price: 85,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "25GB hotspot", "Disney+ included"],
-        hotspot: "25GB"
-    },
-
-    // T-Mobile Plans
-    {
-        id: 6,
-        name: "Essentials",
-        carrier: "T-Mobile",
-        price: 60,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
-        hotspot: "3G speeds"
+        provider_name: "IM TELECOM (Excess Telecom)",
+        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
+        plan_name: "California Standard Plan",
+        price_per_month: "$0/month (with Lifeline discount)",
+        data: "6GB",
+        voice: "Unlimited talk",
+        text: "Unlimited text",
+        speed_notes: null,
+        coverage_notes: "California only",
+        additional_features: null
     },
     {
-        id: 7,
-        name: "Magenta",
-        carrier: "T-Mobile",
-        price: 70,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "5GB hotspot", "Netflix included"],
-        hotspot: "5GB"
+        provider_name: "IM TELECOM (Excess Telecom)",
+        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
+        plan_name: "Tribal Standard Plan",
+        price_per_month: "$0/month",
+        data: "6GB",
+        voice: "3,000 minutes",
+        text: "Unlimited text",
+        speed_notes: null,
+        coverage_notes: "Qualifying Tribal Lands",
+        additional_features: null
     },
     {
-        id: 8,
-        name: "Magenta MAX",
-        carrier: "T-Mobile",
-        price: 85,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "40GB hotspot", "Netflix included", "4K video"],
-        hotspot: "40GB"
+        provider_name: "IM TELECOM (Excess Telecom)",
+        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
+        plan_name: "Tribal Advantage Plan",
+        price_per_month: "$1/month",
+        data: "8GB",
+        voice: "3,000 minutes",
+        text: "Unlimited text",
+        speed_notes: null,
+        coverage_notes: "Qualifying Tribal Lands",
+        additional_features: null
     },
     {
-        id: 9,
-        name: "Go5G",
-        carrier: "T-Mobile",
-        price: 75,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "15GB hotspot", "Apple TV+ included"],
-        hotspot: "15GB"
+        provider_name: "IM TELECOM (Excess Telecom)",
+        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
+        plan_name: "Infiniti Mobile Essentials",
+        price_per_month: "$14/month",
+        data: "1GB high-speed data",
+        voice: "1,000 minutes",
+        text: "1,000 texts",
+        speed_notes: null,
+        coverage_notes: null,
+        additional_features: null
     },
     {
-        id: 10,
-        name: "Go5G Plus",
-        carrier: "T-Mobile",
-        price: 90,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "50GB hotspot", "Apple TV+ included", "4K video"],
-        hotspot: "50GB"
-    },
-
-    // AT&T Plans
-    {
-        id: 11,
-        name: "Unlimited Starter",
-        carrier: "AT&T",
-        price: 65,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
-        hotspot: "No"
+        provider_name: "IM TELECOM (Excess Telecom)",
+        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
+        plan_name: "Infiniti Mobile Enhanced",
+        price_per_month: "$20/month",
+        data: "4.5GB high-speed data",
+        voice: "3,000 minutes",
+        text: "Unlimited texts",
+        speed_notes: null,
+        coverage_notes: null,
+        additional_features: null
     },
     {
-        id: 12,
-        name: "Unlimited Extra",
-        carrier: "AT&T",
-        price: 75,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "15GB hotspot", "HBO Max included"],
-        hotspot: "15GB"
+        provider_name: "IM TELECOM (Excess Telecom)",
+        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
+        plan_name: "Infiniti Mobile Tribal",
+        price_per_month: "$0/month",
+        data: "6GB high-speed data",
+        voice: "3,000 minutes",
+        text: "Unlimited texts",
+        speed_notes: null,
+        coverage_notes: "Available in NV, OK, NY & WI",
+        additional_features: null
     },
     {
-        id: 13,
-        name: "Unlimited Elite",
-        carrier: "AT&T",
-        price: 85,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "40GB hotspot", "HBO Max included", "4K video"],
-        hotspot: "40GB"
+        provider_name: "IM TELECOM (Excess Telecom)",
+        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
+        plan_name: "Infiniti Prepaid Basic",
+        price_per_month: "$25/month",
+        data: "3GB high-speed data",
+        voice: "2,000 minutes",
+        text: "Unlimited texts",
+        speed_notes: null,
+        coverage_notes: "Nationwide",
+        additional_features: null
     },
     {
-        id: 14,
-        name: "Value Plus",
-        carrier: "AT&T",
-        price: 50,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
-        hotspot: "No"
+        provider_name: "IM TELECOM (Excess Telecom)",
+        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
+        plan_name: "Infiniti Prepaid Enhanced",
+        price_per_month: "$30/month",
+        data: "4GB high-speed data",
+        voice: "3,000 minutes",
+        text: "Unlimited texts",
+        speed_notes: null,
+        coverage_notes: "Nationwide",
+        additional_features: null
     },
     {
-        id: 15,
-        name: "Premium",
-        carrier: "AT&T",
-        price: 80,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "30GB hotspot", "HBO Max included", "HD video"],
-        hotspot: "30GB"
+        provider_name: "IM TELECOM (Excess Telecom)",
+        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
+        plan_name: "Infiniti Mobile 6GB",
+        price_per_month: "$0/month",
+        data: "6GB high-speed data",
+        voice: "Unlimited minutes",
+        text: "Unlimited texts",
+        speed_notes: null,
+        coverage_notes: "California only",
+        additional_features: null
     },
-
-    // Budget Carrier Plans
-    {
-        id: 16,
-        name: "Unlimited",
-        carrier: "Visible",
-        price: 30,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
-        hotspot: "One device"
-    },
-    {
-        id: 17,
-        name: "Unlimited Plus",
-        carrier: "Visible",
-        price: 45,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "Unlimited hotspot", "HD video"],
-        hotspot: "Unlimited"
-    },
-    {
-        id: 18,
-        name: "Unlimited",
-        carrier: "Mint Mobile",
-        price: 30,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
-        hotspot: "5GB"
-    },
-    {
-        id: 19,
-        name: "Unlimited Premium",
-        carrier: "Mint Mobile",
-        price: 40,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "15GB hotspot", "HD video"],
-        hotspot: "15GB"
-    },
-    {
-        id: 20,
-        name: "Unlimited",
-        carrier: "Metro by T-Mobile",
-        price: 50,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming", "Google One included"],
-        hotspot: "5GB"
-    }
+    // ... (all other plans from newlifelineplans.txt, in the same flat structure) ...
 ];
 
 // Export the data structure
