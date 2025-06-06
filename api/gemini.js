@@ -1,13 +1,14 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 module.exports = async (req, res) => {
+  // Add debugging logs
   console.log('API Request received:', {
     method: req.method,
     headers: req.headers,
-    body: req.body
+    url: req.url
   });
 
-  // Set CORS headers to allow requests from your domain
+  // Set CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
@@ -29,6 +30,13 @@ module.exports = async (req, res) => {
   }
 
   try {
+    // Log environment check
+    console.log('Environment check:', {
+      NODE_ENV: process.env.NODE_ENV,
+      API_KEY_EXISTS: !!process.env.GOOGLE_GEMINI_API_KEY,
+      API_KEY_LENGTH: process.env.GOOGLE_GEMINI_API_KEY?.length || 0
+    });
+
     const { prompt, temperature = 0.7, maxOutputTokens = 500 } = req.body;
     console.log('Request parameters:', { prompt, temperature, maxOutputTokens });
 
@@ -39,7 +47,6 @@ module.exports = async (req, res) => {
 
     // Get API key from environment variable
     const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
-    console.log('API Key present:', !!apiKey);
     
     if (!apiKey) {
       console.error('GOOGLE_GEMINI_API_KEY not found in environment variables');
@@ -68,7 +75,11 @@ module.exports = async (req, res) => {
     const text = response.text();
     console.log('Successfully generated response with length:', text.length);
 
-    return res.status(200).json({ text });
+    return res.status(200).json({ 
+      success: true,
+      text,
+      timestamp: new Date().toISOString()
+    });
   } catch (error) {
     console.error('Gemini API Error:', {
       message: error.message,
@@ -78,7 +89,7 @@ module.exports = async (req, res) => {
     return res.status(500).json({ 
       error: 'Failed to generate content',
       details: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      timestamp: new Date().toISOString()
     });
   }
 } 
