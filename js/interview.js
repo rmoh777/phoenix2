@@ -132,6 +132,7 @@ async function callGeminiAPI(prompt, temperature = 0.7, maxOutputTokens = 500, r
 
             return data.text;
         } catch (error) {
+            console.error(`Attempt ${attempt} failed:`, error);
             if (attempt > retries) {
                 throw error;
             }

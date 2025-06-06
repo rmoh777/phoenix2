@@ -4,8 +4,14 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 async function callGeminiWithRetry(genAI, prompt, maxRetries = 3) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      const result = await model.generateContent(prompt);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const result = await model.generateContent({
+        contents: [{
+          parts: [{
+            text: prompt
+          }]
+        }]
+      });
       const response = await result.response;
       return response.text();
     } catch (error) {
@@ -88,7 +94,7 @@ export default async function handler(req, res) {
     // Return the response
     res.status(200).json({ 
       success: true, 
-      response: text,
+      text: text,
       timestamp: new Date().toISOString()
     });
 
