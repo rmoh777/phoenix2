@@ -93,7 +93,12 @@ class InterviewController {
                 throw new Error('Invalid response format from Gemini API');
             }
 
+            // Parse the response text to extract plan IDs and ranks
             const planMatches = this.parsePlanMatches(data.text);
+            if (!planMatches || planMatches.length !== 3) {
+                throw new Error('Invalid plan recommendations received');
+            }
+
             const recommendedPlans = this.getRecommendedPlans(planMatches);
             
             // Get explanations for the recommended plans
@@ -104,6 +109,7 @@ class InterviewController {
                 explanations: explanations
             };
         } catch (error) {
+            console.error('API Error:', error);
             throw new Error('Error getting recommendations: ' + error.message);
         }
     }
@@ -121,10 +127,34 @@ Plans: ${JSON.stringify(window.MOBILE_PLANS)}`;
     }
 
     parsePlanMatches(text) {
-        return text.trim().split(',').map(item => {
-            const [id, rank] = item.split(':');
-            return { id: parseInt(id.trim()), rank: rank.trim() };
-        });
+        try {
+            // Clean up the text and extract the plan matches
+            const cleanText = text.trim();
+            const matches = cleanText.split(',').map(item => {
+                const [id, rank] = item.split(':').map(part => part.trim());
+                if (!id || !rank) {
+                    throw new Error('Invalid plan match format');
+                }
+                return {
+                    id: parseInt(id),
+                    rank: rank
+                };
+            });
+
+            // Validate the matches
+            if (matches.length !== 3) {
+                throw new Error('Expected exactly 3 plan matches');
+            }
+
+            if (matches.some(match => isNaN(match.id) || !match.rank)) {
+                throw new Error('Invalid plan ID or rank format');
+            }
+
+            return matches;
+        } catch (error) {
+            console.error('Error parsing plan matches:', error);
+            throw new Error('Failed to parse plan recommendations');
+        }
     }
 
     getRecommendedPlans(planMatches) {
