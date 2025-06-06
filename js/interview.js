@@ -189,6 +189,12 @@ function displayResults(plans, explanations) {
     // Hide loading
     document.getElementById('loading').style.display = 'none';
 
+    // Populate the "Why These Plans?" section
+    const explanationTextElement = document.getElementById('explanationText');
+    if (explanationTextElement) {
+        explanationTextElement.textContent = explanations.summary || 'These plans were selected based on your specific needs and preferences.';
+    }
+
     // Create plan cards
     const plansGrid = document.getElementById('plansGrid');
     plansGrid.innerHTML = '';
