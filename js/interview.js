@@ -35,7 +35,21 @@ async function getRecommendations() {
             })
         });
 
-        const recommendationData = await recommendationResponse.json();
+        console.log('Response status:', recommendationResponse.status);
+        console.log('Response headers:', recommendationResponse.headers.get('content-type'));
+        
+        const responseText = await recommendationResponse.text();
+        console.log('Raw response:', responseText);
+        
+        let recommendationData;
+        try {
+            recommendationData = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error('JSON parse error:', parseError);
+            console.error('Response was not JSON:', responseText);
+            throw new Error(`API returned invalid response (likely HTML error page): ${responseText.substring(0, 100)}...`);
+        }
+        
         console.log('Recommendation API Response:', recommendationData);
         
         if (!recommendationResponse.ok) {
@@ -92,7 +106,17 @@ OVERALL_SUMMARY:
             })
         });
 
-        const explanationData = await explanationResponse.json();
+        const explanationResponseText = await explanationResponse.text();
+        console.log('Explanation raw response:', explanationResponseText);
+        
+        let explanationData;
+        try {
+            explanationData = JSON.parse(explanationResponseText);
+        } catch (parseError) {
+            console.error('Explanation JSON parse error:', parseError);
+            throw new Error(`Explanation API returned invalid response: ${explanationResponseText.substring(0, 100)}...`);
+        }
+        
         console.log('Explanation API Response:', explanationData);
         
         if (!explanationResponse.ok) {

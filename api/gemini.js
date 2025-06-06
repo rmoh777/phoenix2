@@ -1,6 +1,6 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // Set CORS headers to allow requests from your domain
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -48,4 +48,4 @@ module.exports = async (req, res) => {
     console.error('Gemini API Error:', error);
     return res.status(500).json({ error: error.message || 'Internal server error' });
   }
-}; 
+} 
