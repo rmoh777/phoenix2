@@ -165,6 +165,26 @@ async function callGeminiAPI(prompt, temperature = 0.7, maxOutputTokens = 500, r
     throw lastError || new Error('All API attempts failed');
 }
 
+function parseExplanations(text) {
+    const planExplanations = {};
+    const planMatches = text.match(/Plan (\d+): (.*?)(?=\nPlan \d+:|$)/gs);
+    
+    if (planMatches) {
+        planMatches.forEach(match => {
+            const [_, planId, explanation] = match.match(/Plan (\d+): (.*)/);
+            planExplanations[planId] = explanation.trim();
+        });
+    }
+
+    const summaryMatch = text.match(/OVERALL_SUMMARY:\n(.*)/s);
+    const summary = summaryMatch ? summaryMatch[1].trim() : '';
+
+    return {
+        planExplanations,
+        summary
+    };
+}
+
 function displayResults(plans, explanations) {
     // Hide loading
     document.getElementById('loading').style.display = 'none';
@@ -199,7 +219,7 @@ function displayResults(plans, explanations) {
                 ${plan.features.includes('International calling') ? '<li>International calling</li>' : ''}
             </ul>
             <div class="plan-explanation">
-                ${explanations[plan.id] || 'This plan offers great value for your needs.'}
+                ${explanations.planExplanations[plan.id] || 'This plan offers great value for your needs.'}
             </div>
             <a href="https://www.carrierURL.com" target="_blank" class="plan-details-btn">Full Plan Details</a>
         `;
