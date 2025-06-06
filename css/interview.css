@@ -18,6 +18,46 @@
     margin-bottom: 3rem;
 }
 
+.api-key-section {
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    padding: 1.5rem;
+    background-color: #F9FAFB;
+    border-radius: 8px;
+    border: 1px solid #E5E7EB;
+}
+
+.api-key-label {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 1rem;
+    display: block;
+    text-align: left;
+}
+
+.api-key-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #E5E7EB;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.api-key-input:focus {
+    outline: none;
+    border-color: #4F46E5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.api-key-info {
+    font-size: 0.875rem;
+    color: #6B7280;
+    text-align: left;
+}
+
 .question-section {
     margin-bottom: 2rem;
 }

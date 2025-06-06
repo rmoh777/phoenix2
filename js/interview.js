@@ -8,10 +8,16 @@ userInput.addEventListener('input', function() {
 
 // Get recommendations from Gemini API
 async function getRecommendations() {
-    const userInput = document.getElementById('userInput').value.trim();
+    const userInputText = document.getElementById('userInput').value.trim();
+    const apiKey = document.getElementById('apiKey').value.trim();
     
-    if (!userInput) {
+    if (!userInputText) {
         alert('Please enter your mobile plan requirements.');
+        return;
+    }
+
+    if (!apiKey) {
+        alert('Please enter your Gemini API Key.');
         return;
     }
 
@@ -21,44 +27,12 @@ async function getRecommendations() {
 
     try {
         // First API call - get plan recommendations
-        const recommendationPrompt = `You are a mobile plan expert helping someone who might not be familiar with technical terms. Based on this request: "${userInput}", recommend exactly 3 plan IDs from this list that best match the user's needs. Rank them as "Best", "Great", and "Good". Return ONLY the 3 plan IDs as comma-separated numbers with their rank (example: "1:Best,7:Great,12:Good"). Plans: ${JSON.stringify(MOBILE_PLANS)}`;
+        const recommendationPrompt = `You are a mobile plan expert helping someone who might not be familiar with technical terms. Based on this request: "${userInputText}", recommend exactly 3 plan IDs from this list that best match the user's needs. Rank them as "Best", "Great", and "Good". Return ONLY the 3 plan IDs as comma-separated numbers with their rank (example: "1:Best,7:Great,12:Good"). Plans: ${JSON.stringify(MOBILE_PLANS)}`;
 
-        const recommendationResponse = await fetch('/api/gemini', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                prompt: recommendationPrompt,
-                temperature: 0.2,
-                maxOutputTokens: 100
-            })
-        });
-
-        console.log('Response status:', recommendationResponse.status);
-        console.log('Response headers:', recommendationResponse.headers.get('content-type'));
+        const recommendationResponse = await callGeminiAPI(apiKey, recommendationPrompt, 0.2, 100);
         
-        const responseText = await recommendationResponse.text();
-        console.log('Raw response:', responseText);
-        
-        let recommendationData;
-        try {
-            recommendationData = JSON.parse(responseText);
-        } catch (parseError) {
-            console.error('JSON parse error:', parseError);
-            console.error('Response was not JSON:', responseText);
-            throw new Error(`API returned invalid response (likely HTML error page): ${responseText.substring(0, 100)}...`);
-        }
-        
-        console.log('Recommendation API Response:', recommendationData);
-        
-        if (!recommendationResponse.ok) {
-            console.error('API Error Response:', recommendationResponse.status, recommendationData);
-            throw new Error(recommendationData.error || `API returned ${recommendationResponse.status}: Failed to get recommendations`);
-        }
-
         // Parse the plan IDs and ranks
-        const planMatches = recommendationData.text.trim().split(',').map(item => {
+        const planMatches = recommendationResponse.trim().split(',').map(item => {
             const [id, rank] = item.split(':');
             return { id: parseInt(id.trim()), rank: rank.trim() };
         });
@@ -74,7 +48,7 @@ async function getRecommendations() {
 1. A brief explanation (1-2 sentences) of why this plan matches the user's needs
 2. A short summary of why these 3 plans were selected overall
 
-User's request: "${userInput}"
+User's request: "${userInputText}"
 
 Plans:
 ${recommendedPlans.map(plan => `
@@ -94,38 +68,10 @@ ${recommendedPlans.map(plan => `Plan ${plan.id}: [Your explanation here]`).join(
 OVERALL_SUMMARY:
 [Your summary here]`;
 
-        const explanationResponse = await fetch('/api/gemini', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                prompt: explanationPrompt,
-                temperature: 0.7,
-                maxOutputTokens: 500
-            })
-        });
-
-        const explanationResponseText = await explanationResponse.text();
-        console.log('Explanation raw response:', explanationResponseText);
+        const explanationResponse = await callGeminiAPI(apiKey, explanationPrompt, 0.7, 500);
         
-        let explanationData;
-        try {
-            explanationData = JSON.parse(explanationResponseText);
-        } catch (parseError) {
-            console.error('Explanation JSON parse error:', parseError);
-            throw new Error(`Explanation API returned invalid response: ${explanationResponseText.substring(0, 100)}...`);
-        }
-        
-        console.log('Explanation API Response:', explanationData);
-        
-        if (!explanationResponse.ok) {
-            console.error('Explanation API Error Response:', explanationResponse.status, explanationData);
-            throw new Error(explanationData.error || `API returned ${explanationResponse.status}: Failed to get explanations`);
-        }
-
         // Parse explanations
-        const explanationText = explanationData.text;
+        const explanationText = explanationResponse;
         const planExplanations = {};
         
         // Extract individual plan explanations
@@ -146,10 +92,56 @@ OVERALL_SUMMARY:
 
     } catch (error) {
         console.error('Error details:', error);
-        console.error('Error message:', error.message);
         document.getElementById('loading').style.display = 'none';
         document.getElementById('questionSection').style.display = 'block';
-        alert(`Sorry, there was an error getting recommendations: ${error.message}. Please check the console for details and try again.`);
+        alert(`Error: ${error.message}. Please check your API key and try again.`);
+    }
+}
+
+// Call the Gemini API directly
+async function callGeminiAPI(apiKey, prompt, temperature = 0.7, maxOutputTokens = 500) {
+    try {
+        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                contents: [
+                    {
+                        parts: [
+                            {
+                                text: prompt
+                            }
+                        ]
+                    }
+                ],
+                generationConfig: {
+                    temperature,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens,
+                }
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error?.message || `API returned status ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Gemini API Response:', data);
+
+        if (!data.candidates || data.candidates.length === 0) {
+            throw new Error('No response from Gemini API');
+        }
+
+        // Extract the text from the response
+        return data.candidates[0].content.parts[0].text;
+    } catch (error) {
+        console.error('Gemini API Error:', error);
+        throw error;
     }
 }
 
