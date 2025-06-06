@@ -99,11 +99,19 @@ class InterviewController {
     }
 
     buildPrompt(userInput) {
-        const prompt = `You are a mobile plan expert helping someone who might not be familiar with technical terms. 
-Based on this request: "${userInput}", 
-recommend exactly 3 plan IDs from this list that best match the user's needs. 
+        const prompt = `You are a Lifeline program expert helping someone find government-assisted mobile plans for low-income households.
+
+Based on this request: "${userInput}", recommend exactly 3 plan IDs from this list that best match the user's needs for affordable connectivity. 
+
+Focus on:
+- FREE or very low-cost plans (under $5/month) 
+- Plans with "Lifeline" benefits
+- Government assistance programs
+- Basic connectivity needs
+
 Rank them as "Best", "Great", and "Good". 
 Return ONLY the 3 plan IDs as comma-separated numbers with their rank (example: "1:Best,7:Great,12:Good"). 
+
 Plans: ${JSON.stringify(window.MOBILE_PLANS)}`;
 
         return prompt;
@@ -247,6 +255,7 @@ OVERALL_SUMMARY:
                             <div class="carrier">${plan.carrier}</div>
                             <div class="plan-name">${plan.name}</div>
                             <div class="price">$${plan.price}<span style="font-size:0.9rem;font-weight:400;">/mo</span></div>
+                            ${plan.price === 0 ? '<div style="color: #22c55e; font-weight: bold; font-size: 0.9rem;">✓ FREE with Lifeline</div>' : ''}
                         </div>
                         <ul class="features">
                             <li>${plan.data} Data</li>
@@ -256,7 +265,7 @@ OVERALL_SUMMARY:
                         <div class="plan-explanation">
                             ${explanations.planExplanations[plan.id] || 'No explanation available.'}
                         </div>
-                        <button class="plan-details-btn" tabindex="0">Full Plan Details</button>
+                        <button class="plan-details-btn" tabindex="0">Check Eligibility & Apply</button>
                     </div>
                 `).join('')}
             </div>

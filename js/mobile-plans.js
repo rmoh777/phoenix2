@@ -13,178 +13,141 @@
  */
 
 const MOBILE_PLANS = [
-    // Plans generated from newlifelineplans.txt
-    // Each plan is a flat object with provider and plan details
+    // IM TELECOM Plans
     {
-        provider_name: "IM TELECOM (Excess Telecom)",
-        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
-        plan_name: "Standard Plan",
-        price_per_month: "$0/month (with Lifeline discount)",
+        id: 1,
+        name: "Standard Plan",
+        carrier: "IM TELECOM (Excess Telecom)",
+        price: 0,
         data: "4.5GB",
-        voice: "3,000 minutes",
-        text: "Unlimited text",
-        speed_notes: null,
-        coverage_notes: null,
-        additional_features: null,
-        features: []
+        features: ["3,000 minutes", "Unlimited text", "Lifeline discount"],
+        hotspot: "Not specified"
     },
     {
-        provider_name: "IM TELECOM (Excess Telecom)",
-        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
-        plan_name: "Advantage Plan",
-        price_per_month: "$1/month (with Lifeline discount)",
+        id: 2,
+        name: "Advantage Plan", 
+        carrier: "IM TELECOM (Excess Telecom)",
+        price: 1,
         data: "6.5GB",
-        voice: "3,000 minutes",
-        text: "Unlimited text",
-        speed_notes: null,
-        coverage_notes: null,
-        additional_features: null,
-        features: []
+        features: ["3,000 minutes", "Unlimited text", "Lifeline discount"],
+        hotspot: "Not specified"
     },
     {
-        provider_name: "IM TELECOM (Excess Telecom)",
-        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
-        plan_name: "Kentucky Standard Plan",
-        price_per_month: "$0/month (with Lifeline discount)",
-        data: "4.5GB",
-        voice: "Unlimited talk",
-        text: "Unlimited text",
-        speed_notes: null,
-        coverage_notes: "Kentucky only",
-        additional_features: null,
-        features: []
+        id: 3,
+        name: "Kentucky Standard Plan",
+        carrier: "IM TELECOM (Excess Telecom)",
+        price: 0,
+        data: "4.5GB", 
+        features: ["Unlimited talk", "Unlimited text", "Kentucky only"],
+        hotspot: "Not specified"
     },
     {
-        provider_name: "IM TELECOM (Excess Telecom)",
-        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
-        plan_name: "Kentucky Advantage Plan",
-        price_per_month: "$1/month (with Lifeline discount)",
-        data: "6.5GB",
-        voice: "Unlimited talk",
-        text: "Unlimited text",
-        speed_notes: null,
-        coverage_notes: "Kentucky only",
-        additional_features: null,
-        features: []
-    },
-    {
-        provider_name: "IM TELECOM (Excess Telecom)",
-        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
-        plan_name: "California Standard Plan",
-        price_per_month: "$0/month (with Lifeline discount)",
+        id: 4,
+        name: "California Standard Plan",
+        carrier: "IM TELECOM (Excess Telecom)",
+        price: 0,
         data: "6GB",
-        voice: "Unlimited talk",
-        text: "Unlimited text",
-        speed_notes: null,
-        coverage_notes: "California only",
-        additional_features: null,
-        features: []
+        features: ["Unlimited talk", "Unlimited text", "California only"],
+        hotspot: "Not specified"
     },
     {
-        provider_name: "IM TELECOM (Excess Telecom)",
-        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
-        plan_name: "Tribal Standard Plan",
-        price_per_month: "$0/month",
+        id: 5,
+        name: "Tribal Standard Plan",
+        carrier: "IM TELECOM (Excess Telecom)",
+        price: 0,
         data: "6GB",
-        voice: "3,000 minutes",
-        text: "Unlimited text",
-        speed_notes: null,
-        coverage_notes: "Qualifying Tribal Lands",
-        additional_features: null,
-        features: []
+        features: ["3,000 minutes", "Unlimited text", "Qualifying Tribal Lands"],
+        hotspot: "Not specified"
     },
     {
-        provider_name: "IM TELECOM (Excess Telecom)",
-        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
-        plan_name: "Tribal Advantage Plan",
-        price_per_month: "$1/month",
+        id: 6,
+        name: "Tribal Advantage Plan",
+        carrier: "IM TELECOM (Excess Telecom)",
+        price: 1,
         data: "8GB",
-        voice: "3,000 minutes",
-        text: "Unlimited text",
-        speed_notes: null,
-        coverage_notes: "Qualifying Tribal Lands",
-        additional_features: null,
-        features: []
+        features: ["3,000 minutes", "Unlimited text", "Qualifying Tribal Lands"],
+        hotspot: "Not specified"
+    },
+    
+    // TRACFONE WIRELESS Plans
+    {
+        id: 7,
+        name: "Standard Lifeline Discount",
+        carrier: "TRACFONE WIRELESS",
+        price: 10,
+        data: "At least 4.5GB",
+        features: ["$10/month discount", "Caller ID", "Call Waiting", "Voicemail"],
+        hotspot: "Depends on plan"
     },
     {
-        provider_name: "IM TELECOM (Excess Telecom)",
-        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
-        plan_name: "Infiniti Mobile Essentials",
-        price_per_month: "$14/month",
-        data: "1GB high-speed data",
-        voice: "1,000 minutes",
-        text: "1,000 texts",
-        speed_notes: null,
-        coverage_notes: null,
-        additional_features: null,
-        features: []
+        id: 8,
+        name: "Tribal Lifeline Discount", 
+        carrier: "TRACFONE WIRELESS",
+        price: 0,
+        data: "At least 4.5GB",
+        features: ["Up to $35/month discount", "Qualifying Tribal Lands", "Caller ID"],
+        hotspot: "Depends on plan"
+    },
+    
+    // ASSURANCE WIRELESS Plans
+    {
+        id: 9,
+        name: "Standard Lifeline Service",
+        carrier: "VIRGIN MOBILE USA (Assurance Wireless)", 
+        price: 0,
+        data: "4.5GB",
+        features: ["3,000 minutes", "Unlimited text", "Free monthly service"],
+        hotspot: "Not included"
     },
     {
-        provider_name: "IM TELECOM (Excess Telecom)",
-        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
-        plan_name: "Infiniti Mobile Enhanced",
-        price_per_month: "$20/month",
-        data: "4.5GB high-speed data",
-        voice: "3,000 minutes",
-        text: "Unlimited texts",
-        speed_notes: null,
-        coverage_notes: null,
-        additional_features: null,
-        features: []
+        id: 10,
+        name: "Data Peace of Mind Plan",
+        carrier: "VIRGIN MOBILE USA (Assurance Wireless)",
+        price: 10,
+        data: "7GB/month hotspot",
+        features: ["Mobile hotspot data", "Annual payment option"],
+        hotspot: "7GB"
+    },
+    
+    // AIRTALK WIRELESS Plans
+    {
+        id: 11,
+        name: "Standard Lifeline Service",
+        carrier: "AIR VOICE WIRELESS (AirTalk Wireless)",
+        price: 0,
+        data: "Up to 10GB (varies by state)",
+        features: ["Unlimited talk", "Unlimited text", "5G+ high-speed", "Free smartphones"],
+        hotspot: "Not specified"
+    },
+    
+    // VERIZON Plans
+    {
+        id: 12,
+        name: "Lifeline Discount (general)",
+        carrier: "VERIZON",
+        price: 9,
+        data: "Variable",
+        features: ["At least $9.25/month discount", "Depends on chosen plan"],
+        hotspot: "Depends on plan"
     },
     {
-        provider_name: "IM TELECOM (Excess Telecom)",
-        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
-        plan_name: "Infiniti Mobile Tribal",
-        price_per_month: "$0/month",
-        data: "6GB high-speed data",
-        voice: "3,000 minutes",
-        text: "Unlimited texts",
-        speed_notes: null,
-        coverage_notes: "Available in NV, OK, NY & WI",
-        additional_features: null,
-        features: []
+        id: 13,
+        name: "$25.00 Lifeline Plan",
+        carrier: "VERIZON", 
+        price: 16,
+        data: "No data service",
+        features: ["1,000 anytime minutes", "Unlimited text", "Local mobile to mobile"],
+        hotspot: "No"
     },
     {
-        provider_name: "IM TELECOM (Excess Telecom)",
-        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
-        plan_name: "Infiniti Prepaid Basic",
-        price_per_month: "$25/month",
-        data: "3GB high-speed data",
-        voice: "2,000 minutes",
-        text: "Unlimited texts",
-        speed_notes: null,
-        coverage_notes: "Nationwide",
-        additional_features: null,
-        features: []
-    },
-    {
-        provider_name: "IM TELECOM (Excess Telecom)",
-        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
-        plan_name: "Infiniti Prepaid Enhanced",
-        price_per_month: "$30/month",
-        data: "4GB high-speed data",
-        voice: "3,000 minutes",
-        text: "Unlimited texts",
-        speed_notes: null,
-        coverage_notes: "Nationwide",
-        additional_features: null,
-        features: []
-    },
-    {
-        provider_name: "IM TELECOM (Excess Telecom)",
-        official_signup_urls: "https://www.excesstelecom.com/plans/lifeline",
-        plan_name: "Infiniti Mobile 6GB",
-        price_per_month: "$0/month",
-        data: "6GB high-speed data",
-        voice: "Unlimited minutes",
-        text: "Unlimited texts",
-        speed_notes: null,
-        coverage_notes: "California only",
-        additional_features: null,
-        features: []
-    },
-    // ... (all other plans from newlifelineplans.txt, in the same flat structure) ...
+        id: 14,
+        name: "$19.99 Home Phone Connect Plan",
+        carrier: "VERIZON",
+        price: 11,
+        data: "N/A (home phone)",
+        features: ["Unlimited minutes", "Home phone service", "Requires device"],
+        hotspot: "N/A"
+    }
 ];
 
 // Export the data structure
