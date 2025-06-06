@@ -153,15 +153,22 @@ Plans: ${JSON.stringify(window.MOBILE_PLANS)}`;
             throw new Error('Invalid plan recommendations received');
         }
 
-        return planMatches.map(match => ({
-            ...window.MOBILE_PLANS.find(plan => plan.id === match.id),
-            rank: match.rank
-        }));
+        return planMatches.map(match => {
+            const plan = window.MOBILE_PLANS.find(plan => plan.id === match.id);
+            return {
+                ...plan,
+                rank: match.rank,
+                companyName: plan.carrier // Assuming 'carrier' is the company name
+            };
+        });
     }
 
     async getPlanExplanations(userInput, plans) {
         const prompt = `You are a friendly mobile plan expert explaining things to someone who might not be familiar with technical terms. 
 Use simple, everyday language that a high school student would understand. 
+
+IMPORTANT: NEVER reference plan numbers, plan IDs, or say "Plan 1", "Plan 2", etc. ONLY use the company names when referring to specific plans.
+
 For each of these plans, provide:
 1. A brief explanation (1-2 sentences) of why this plan matches the user's needs
 2. A short summary of why these 3 plans were selected overall
@@ -170,8 +177,7 @@ User's request: "${userInput}"
 
 Plans:
 ${plans.map(plan => `
-Plan ${plan.id} (${plan.rank}):
-- Name: ${plan.name}
+${plan.companyName} ${plan.name} (${plan.rank}):
 - Carrier: ${plan.carrier}
 - Price: $${plan.price}/mo
 - Data: ${plan.data}
@@ -181,10 +187,10 @@ Plan ${plan.id} (${plan.rank}):
 
 Format your response exactly like this:
 PLAN_EXPLANATIONS:
-${plans.map(plan => `Plan ${plan.id}: [Your explanation here]`).join('\n')}
+${plans.map(plan => `${plan.companyName}: [Your explanation here - do NOT mention any plan numbers]`).join('\n')}
 
 OVERALL_SUMMARY:
-[Your summary here]`;
+[Your summary here - do NOT mention any plan numbers, only use company names]`;
 
         try {
             const response = await fetch('/api/gemini', {
@@ -216,16 +222,19 @@ OVERALL_SUMMARY:
 
     parseExplanations(text) {
         const planExplanations = {};
-        const planMatches = text.match(/Plan (\d+): (.*?)(?=\nPlan \d+:|$)/gs);
+        // Updated regex to handle company names without "Plan" prefix
+        const planMatches = text.match(/([A-Z\s]+(?:TELECOM|Telecom)?[^:]*): (.*?)(?=\n[A-Z\s]+(?:TELECOM|Telecom)?[^:]*:|$)/gs);
         
         if (planMatches) {
             planMatches.forEach(match => {
-                const [_, planId, explanation] = match.match(/Plan (\d+): (.*)/);
-                planExplanations[planId] = explanation.trim();
+                const [_, companyName, explanation] = match.match(/([A-Z\s]+(?:TELECOM|Telecom)?[^:]*): (.*)/s);
+                if (companyName && explanation) {
+                    planExplanations[companyName.trim()] = explanation.trim();
+                }
             });
         }
 
-        const summaryMatch = text.match(/OVERALL_SUMMARY:\n(.*)/s);
+        const summaryMatch = text.match(/OVERALL_SUMMARY:\s*\n(.*)/s);
         const summary = summaryMatch ? summaryMatch[1].trim() : '';
 
         return {
@@ -252,7 +261,7 @@ OVERALL_SUMMARY:
                     <div class="plan-card">
                         <div class="plan-header">
                             <div class="rank-badge rank-${plan.rank.toLowerCase()}">${plan.rank}</div>
-                            <div class="carrier">${plan.carrier}</div>
+                            <div class="carrier">${plan.companyName}</div>
                             <div class="plan-name">${plan.name}</div>
                             <div class="price">$${plan.price}<span style="font-size:0.9rem;font-weight:400;">/mo</span></div>
                             ${plan.price === 0 ? '<div style="color: #22c55e; font-weight: bold; font-size: 0.9rem;">✓ FREE with Lifeline</div>' : ''}
@@ -263,7 +272,7 @@ OVERALL_SUMMARY:
                             <li>Hotspot: ${plan.hotspot}</li>
                         </ul>
                         <div class="plan-explanation">
-                            ${explanations.planExplanations[plan.id] || 'No explanation available.'}
+                            ${explanations.planExplanations[plan.companyName] || 'No explanation available.'}
                         </div>
                         <button class="plan-details-btn" tabindex="0">Check Eligibility & Apply</button>
                     </div>
