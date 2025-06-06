@@ -25,7 +25,8 @@ const MOBILE_PLANS = [
         text: "Unlimited text",
         speed_notes: null,
         coverage_notes: null,
-        additional_features: null
+        additional_features: null,
+        features: []
     },
     {
         provider_name: "IM TELECOM (Excess Telecom)",
@@ -37,7 +38,8 @@ const MOBILE_PLANS = [
         text: "Unlimited text",
         speed_notes: null,
         coverage_notes: null,
-        additional_features: null
+        additional_features: null,
+        features: []
     },
     {
         provider_name: "IM TELECOM (Excess Telecom)",
@@ -49,7 +51,8 @@ const MOBILE_PLANS = [
         text: "Unlimited text",
         speed_notes: null,
         coverage_notes: "Kentucky only",
-        additional_features: null
+        additional_features: null,
+        features: []
     },
     {
         provider_name: "IM TELECOM (Excess Telecom)",
@@ -61,7 +64,8 @@ const MOBILE_PLANS = [
         text: "Unlimited text",
         speed_notes: null,
         coverage_notes: "Kentucky only",
-        additional_features: null
+        additional_features: null,
+        features: []
     },
     {
         provider_name: "IM TELECOM (Excess Telecom)",
@@ -73,7 +77,8 @@ const MOBILE_PLANS = [
         text: "Unlimited text",
         speed_notes: null,
         coverage_notes: "California only",
-        additional_features: null
+        additional_features: null,
+        features: []
     },
     {
         provider_name: "IM TELECOM (Excess Telecom)",
@@ -85,7 +90,8 @@ const MOBILE_PLANS = [
         text: "Unlimited text",
         speed_notes: null,
         coverage_notes: "Qualifying Tribal Lands",
-        additional_features: null
+        additional_features: null,
+        features: []
     },
     {
         provider_name: "IM TELECOM (Excess Telecom)",
@@ -97,7 +103,8 @@ const MOBILE_PLANS = [
         text: "Unlimited text",
         speed_notes: null,
         coverage_notes: "Qualifying Tribal Lands",
-        additional_features: null
+        additional_features: null,
+        features: []
     },
     {
         provider_name: "IM TELECOM (Excess Telecom)",
@@ -109,7 +116,8 @@ const MOBILE_PLANS = [
         text: "1,000 texts",
         speed_notes: null,
         coverage_notes: null,
-        additional_features: null
+        additional_features: null,
+        features: []
     },
     {
         provider_name: "IM TELECOM (Excess Telecom)",
@@ -121,7 +129,8 @@ const MOBILE_PLANS = [
         text: "Unlimited texts",
         speed_notes: null,
         coverage_notes: null,
-        additional_features: null
+        additional_features: null,
+        features: []
     },
     {
         provider_name: "IM TELECOM (Excess Telecom)",
@@ -133,7 +142,8 @@ const MOBILE_PLANS = [
         text: "Unlimited texts",
         speed_notes: null,
         coverage_notes: "Available in NV, OK, NY & WI",
-        additional_features: null
+        additional_features: null,
+        features: []
     },
     {
         provider_name: "IM TELECOM (Excess Telecom)",
@@ -145,7 +155,8 @@ const MOBILE_PLANS = [
         text: "Unlimited texts",
         speed_notes: null,
         coverage_notes: "Nationwide",
-        additional_features: null
+        additional_features: null,
+        features: []
     },
     {
         provider_name: "IM TELECOM (Excess Telecom)",
@@ -157,7 +168,8 @@ const MOBILE_PLANS = [
         text: "Unlimited texts",
         speed_notes: null,
         coverage_notes: "Nationwide",
-        additional_features: null
+        additional_features: null,
+        features: []
     },
     {
         provider_name: "IM TELECOM (Excess Telecom)",
@@ -169,7 +181,8 @@ const MOBILE_PLANS = [
         text: "Unlimited texts",
         speed_notes: null,
         coverage_notes: "California only",
-        additional_features: null
+        additional_features: null,
+        features: []
     },
     // ... (all other plans from newlifelineplans.txt, in the same flat structure) ...
 ];
