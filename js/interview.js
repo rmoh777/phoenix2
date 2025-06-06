@@ -87,6 +87,7 @@ OVERALL_SUMMARY:
 // Call the Gemini API through our serverless endpoint
 async function callGeminiAPI(prompt, temperature = 0.7, maxOutputTokens = 500) {
     try {
+        console.log('Making API request with prompt:', prompt);
         const response = await fetch('/api/gemini', {
             method: 'POST',
             headers: {
@@ -99,14 +100,25 @@ async function callGeminiAPI(prompt, temperature = 0.7, maxOutputTokens = 500) {
             })
         });
 
-        const data = await response.json();
-        
+        console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+        const responseText = await response.text();
+        console.log('Raw response:', responseText);
+
+        let data;
+        try {
+            data = JSON.parse(responseText);
+        } catch (e) {
+            console.error('JSON parse error. Response was:', responseText);
+            throw new Error('Server returned invalid response');
+        }
+
         if (!response.ok) {
-            console.error('API Error Response:', data);
             throw new Error(data.error || data.details || `API returned status ${response.status}`);
         }
 
-        if (!data.text) {
+        if (!data.success || !data.text) {
             throw new Error('Invalid response format from API');
         }
 
