@@ -1,6 +1,30 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-module.exports = async (req, res) => {
+// Add retry logic with exponential backoff
+async function callGeminiWithRetry(genAI, prompt, maxRetries = 3) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      return response.text();
+    } catch (error) {
+      console.log(`Attempt ${attempt} failed:`, error.message);
+      
+      // If it's a 503 error and not the last attempt, wait and retry
+      if ((error.message.includes('503') || error.message.includes('overloaded') || error.message.includes('unavailable')) && attempt < maxRetries) {
+        const waitTime = Math.pow(2, attempt) * 1000; // Exponential backoff: 2s, 4s, 8s
+        console.log(`Waiting ${waitTime}ms before retry...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        continue;
+      }
+      
+      throw error; // If not retryable or max attempts reached
+    }
+  }
+}
+
+export default async function handler(req, res) {
   // Add debugging logs
   console.log('API Request received:', {
     method: req.method,
@@ -24,6 +48,7 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // Only allow POST requests
   if (req.method !== 'POST') {
     console.error('Invalid method:', req.method);
     return res.status(405).json({ error: 'Method not allowed' });
@@ -37,6 +62,18 @@ module.exports = async (req, res) => {
       API_KEY_LENGTH: process.env.GOOGLE_GEMINI_API_KEY?.length || 0
     });
 
+    // Get API key from environment variables
+    const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+    
+    if (!apiKey) {
+      console.error('GOOGLE_GEMINI_API_KEY not found in environment variables');
+      return res.status(500).json({ error: 'API configuration error' });
+    }
+
+    // Initialize Gemini AI
+    const genAI = new GoogleGenerativeAI(apiKey);
+
+    // Extract prompt from request body
     const { prompt, temperature = 0.7, maxOutputTokens = 500 } = req.body;
     console.log('Request parameters:', { prompt, temperature, maxOutputTokens });
 
@@ -45,51 +82,30 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
-    // Get API key from environment variable
-    const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+    // Use retry logic instead of direct call
+    const text = await callGeminiWithRetry(genAI, prompt, 3);
+
+    // Return the response
+    res.status(200).json({ 
+      success: true, 
+      response: text,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('Gemini API Error:', error);
     
-    if (!apiKey) {
-      console.error('GOOGLE_GEMINI_API_KEY not found in environment variables');
-      return res.status(500).json({ 
-        error: 'API configuration error',
-        details: 'API key not found in environment variables'
+    // Return specific error messages for common issues
+    if (error.message.includes('503') || error.message.includes('overloaded')) {
+      return res.status(503).json({ 
+        error: 'AI service is temporarily overloaded. Please try again in a few minutes.',
+        retryable: true
       });
     }
-
-    console.log('Initializing Gemini API with key length:', apiKey.length);
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-    console.log('Generating content with prompt length:', prompt.length);
-    const result = await model.generateContent({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature,
-        topK: 40,
-        topP: 0.95,
-        maxOutputTokens,
-      },
-    });
-
-    const response = await result.response;
-    const text = response.text();
-    console.log('Successfully generated response with length:', text.length);
-
-    return res.status(200).json({ 
-      success: true,
-      text,
-      timestamp: new Date().toISOString()
-    });
-  } catch (error) {
-    console.error('Gemini API Error:', {
-      message: error.message,
-      stack: error.stack,
-      name: error.name
-    });
-    return res.status(500).json({ 
+    
+    res.status(500).json({ 
       error: 'Failed to generate content',
-      details: error.message,
-      timestamp: new Date().toISOString()
+      details: error.message 
     });
   }
 } 

@@ -85,47 +85,57 @@ OVERALL_SUMMARY:
 }
 
 // Call the Gemini API through our serverless endpoint
-async function callGeminiAPI(prompt, temperature = 0.7, maxOutputTokens = 500) {
-    try {
-        console.log('Making API request with prompt:', prompt);
-        const response = await fetch('/api/gemini', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                prompt,
-                temperature,
-                maxOutputTokens
-            })
-        });
-
-        console.log('Response status:', response.status);
-        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-
-        const responseText = await response.text();
-        console.log('Raw response:', responseText);
-
-        let data;
+async function callGeminiAPI(prompt, temperature = 0.7, maxOutputTokens = 500, retries = 2) {
+    for (let attempt = 1; attempt <= retries + 1; attempt++) {
         try {
-            data = JSON.parse(responseText);
-        } catch (e) {
-            console.error('JSON parse error. Response was:', responseText);
-            throw new Error('Server returned invalid response');
-        }
+            console.log('Making API request with prompt:', prompt);
+            const response = await fetch('/api/gemini', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    prompt,
+                    temperature,
+                    maxOutputTokens
+                })
+            });
 
-        if (!response.ok) {
-            throw new Error(data.error || data.details || `API returned status ${response.status}`);
-        }
+            console.log('Response status:', response.status);
+            console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
-        if (!data.success || !data.text) {
-            throw new Error('Invalid response format from API');
-        }
+            const responseText = await response.text();
+            console.log('Raw response:', responseText);
 
-        return data.text;
-    } catch (error) {
-        console.error('Gemini API Error:', error);
-        throw error;
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (e) {
+                console.error('JSON parse error. Response was:', responseText);
+                throw new Error('Server returned invalid response');
+            }
+
+            if (!response.ok) {
+                // If it's a 503 and retryable, wait and try again
+                if (response.status === 503 && data.retryable && attempt <= retries) {
+                    const waitTime = 2000 * attempt; // 2s, 4s
+                    console.log(`API overloaded, retrying in ${waitTime}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, waitTime));
+                    continue;
+                }
+                throw new Error(data.error || 'API request failed');
+            }
+
+            if (!data.success || !data.text) {
+                throw new Error('Invalid response format from API');
+            }
+
+            return data.text;
+        } catch (error) {
+            if (attempt > retries) {
+                throw error;
+            }
+        }
     }
 }
 
@@ -177,4 +187,40 @@ function displayResults(plans, explanations) {
 
 function startOver() {
     location.reload();
-} 
+}
+
+// Update the form submission handler
+document.getElementById('interviewForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const submitButton = document.getElementById('submitButton');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const errorMessage = document.getElementById('errorMessage');
+    
+    try {
+        // Show loading state
+        submitButton.disabled = true;
+        loadingSpinner.style.display = 'inline-block';
+        errorMessage.textContent = '';
+        
+        // Get form data
+        const formData = new FormData(this);
+        const prompt = formData.get('prompt');
+        
+        // Call API with retry logic
+        const response = await callGeminiAPI(prompt);
+        
+        // Handle successful response
+        document.getElementById('response').textContent = response;
+        document.getElementById('responseContainer').style.display = 'block';
+        
+    } catch (error) {
+        console.error('Error:', error);
+        errorMessage.textContent = error.message || 'An error occurred. Please try again.';
+        errorMessage.style.display = 'block';
+    } finally {
+        // Reset loading state
+        submitButton.disabled = false;
+        loadingSpinner.style.display = 'none';
+    }
+}); 
