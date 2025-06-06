@@ -1,0 +1,25 @@
+{
+  "name": "ga-connects-mobile-plan-finder",
+  "version": "1.0.0",
+  "description": "Mobile Plan Finder for Georgia Connects - AI-powered mobile plan recommendations",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required for static site'",
+    "deploy": "vercel"
+  },
+  "keywords": [
+    "mobile plans",
+    "georgia connects",
+    "ai recommendations",
+    "gemini api"
+  ],
+  "author": "Georgia Connects",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.17.1"
+  },
+  "devDependencies": {
+    "vercel": "^33.0.0"
+  }
+} 
