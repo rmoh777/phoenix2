@@ -1,0 +1,359 @@
+[
+    {
+        "provider_name": "IM TELECOM (Excess Telecom)",
+        "official_signup_urls": "https://www.excesstelecom.com/plans/lifeline",
+        "customer_support_channels": {
+            "online": "Help Center, FAQ section"
+        },
+        "plans": [
+            {
+                "plan_name": "Standard Plan",
+                "price_per_month": "$0/month (with Lifeline discount)",
+                "data": "4.5GB",
+                "voice": "3,000 minutes",
+                "text": "Unlimited text",
+                "speed_notes": null,
+                "coverage_notes": null,
+                "additional_features": null
+            },
+            {
+                "plan_name": "Advantage Plan",
+                "price_per_month": "$1/month (with Lifeline discount)",
+                "data": "6.5GB",
+                "voice": "3,000 minutes",
+                "text": "Unlimited text",
+                "speed_notes": null,
+                "coverage_notes": null,
+                "additional_features": null
+            },
+            {
+                "plan_name": "Kentucky Standard Plan",
+                "price_per_month": "$0/month (with Lifeline discount)",
+                "data": "4.5GB",
+                "voice": "Unlimited talk",
+                "text": "Unlimited text",
+                "speed_notes": null,
+                "coverage_notes": "Kentucky only",
+                "additional_features": null
+            },
+            {
+                "plan_name": "Kentucky Advantage Plan",
+                "price_per_month": "$1/month (with Lifeline discount)",
+                "data": "6.5GB",
+                "voice": "Unlimited talk",
+                "text": "Unlimited text",
+                "speed_notes": null,
+                "coverage_notes": "Kentucky only",
+                "additional_features": null
+            },
+            {
+                "plan_name": "California Standard Plan",
+                "price_per_month": "$0/month (with Lifeline discount)",
+                "data": "6GB",
+                "voice": "Unlimited talk",
+                "text": "Unlimited text",
+                "speed_notes": null,
+                "coverage_notes": "California only",
+                "additional_features": null
+            },
+            {
+                "plan_name": "Tribal Standard Plan",
+                "price_per_month": "$0/month",
+                "data": "6GB",
+                "voice": "3,000 minutes",
+                "text": "Unlimited text",
+                "speed_notes": null,
+                "coverage_notes": "Qualifying Tribal Lands",
+                "additional_features": null
+            },
+            {
+                "plan_name": "Tribal Advantage Plan",
+                "price_per_month": "$1/month",
+                "data": "8GB",
+                "voice": "3,000 minutes",
+                "text": "Unlimited text",
+                "speed_notes": null,
+                "coverage_notes": "Qualifying Tribal Lands",
+                "additional_features": null
+            },
+            {
+                "plan_name": "Infiniti Mobile Essentials",
+                "price_per_month": "$14/month",
+                "data": "1GB high-speed data",
+                "voice": "1,000 minutes",
+                "text": "1,000 texts",
+                "speed_notes": null,
+                "coverage_notes": null,
+                "additional_features": null
+            },
+            {
+                "plan_name": "Infiniti Mobile Enhanced",
+                "price_per_month": "$20/month",
+                "data": "4.5GB high-speed data",
+                "voice": "3,000 minutes",
+                "text": "Unlimited texts",
+                "speed_notes": null,
+                "coverage_notes": null,
+                "additional_features": null
+            },
+            {
+                "plan_name": "Infiniti Mobile Tribal",
+                "price_per_month": "$0/month",
+                "data": "6GB high-speed data",
+                "voice": "3,000 minutes",
+                "text": "Unlimited texts",
+                "speed_notes": null,
+                "coverage_notes": "Available in NV, OK, NY & WI",
+                "additional_features": null
+            },
+            {
+                "plan_name": "Infiniti Prepaid Basic",
+                "price_per_month": "$25/month",
+                "data": "3GB high-speed data",
+                "voice": "2,000 minutes",
+                "text": "Unlimited texts",
+                "speed_notes": null,
+                "coverage_notes": "Nationwide",
+                "additional_features": null
+            },
+            {
+                "plan_name": "Infiniti Prepaid Enhanced",
+                "price_per_month": "$30/month",
+                "data": "4GB high-speed data",
+                "voice": "3,000 minutes",
+                "text": "Unlimited texts",
+                "speed_notes": null,
+                "coverage_notes": "Nationwide",
+                "additional_features": null
+            },
+            {
+                "plan_name": "Infiniti Mobile 6GB",
+                "price_per_month": "$0/month",
+                "data": "6GB high-speed data",
+                "voice": "Unlimited minutes",
+                "text": "Unlimited texts",
+                "speed_notes": null,
+                "coverage_notes": "California only",
+                "additional_features": null
+            }
+        ]
+    },
+    {
+        "provider_name": "TRACFONE WIRELESS",
+        "official_signup_urls": "https://www.tracfonewirelessinc.com/en/lifeline",
+        "customer_support_channels": {
+            "phone": {
+                "Enrollment & Plan Changes (SafeLink)": "1-800-723-3546",
+                "Technical Support (SafeLink)": "1-800-378-1684",
+                "Enrollment & Plan Changes (Walmart Family Mobile)": "1-800-973-9716",
+                "Technical Support (Walmart Family Mobile)": "1-877-440-9758",
+                "General Questions/Complaints": "1-800-867-7183",
+                "Compliance Hotline": "1-844-894-8433"
+            },
+            "text": "Text HELP to 611611 from a Tracfone phone"
+        },
+        "plans": [
+            {
+                "plan_name": "Standard Lifeline Discount",
+                "price_per_month": "$10/month discount on any monthly smartphone, hotspot, or tablet plan with at least 4.5GB of data",
+                "data": "Variable (at least 4.5GB)",
+                "voice": "Variable (depends on chosen plan)",
+                "text": "Variable (depends on chosen plan)",
+                "speed_notes": null,
+                "coverage_notes": "Available in most states, excluding Oregon, Nebraska, and South Dakota for Tracfone Lifeline.",
+                "additional_features": "Caller ID, Call Waiting, Voicemail, 3-way calling, free 411 and 911 access, free calls to Customer Care."
+            },
+            {
+                "plan_name": "Tribal Lifeline Discount",
+                "price_per_month": "Up to $35/month discount on any monthly smartphone, hotspot, or tablet plan with at least 4.5GB of data",
+                "data": "Variable (at least 4.5GB)",
+                "voice": "Variable (depends on chosen plan)",
+                "text": "Variable (depends on chosen plan)",
+                "speed_notes": null,
+                "coverage_notes": "Qualifying Tribal Lands",
+                "additional_features": "Caller ID, Call Waiting, Voicemail, 3-way calling, free 411 and 911 access, free calls to Customer Care."
+            }
+        ]
+    },
+    {
+        "provider_name": "VIRGIN MOBILE USA (Assurance Wireless)",
+        "official_signup_urls": "https://www.assurancewireless.com/",
+        "customer_support_channels": {
+            "phone": "1-888-321-5880",
+            "online": "Help Center, FAQs, Check Application Status sections on the website"
+        },
+        "plans": [
+            {
+                "plan_name": "Standard Lifeline Service",
+                "price_per_month": "Free monthly service",
+                "data": "4.5GB high-speed data",
+                "voice": "3,000 minutes",
+                "text": "Unlimited text",
+                "speed_notes": "On T-Mobile Network",
+                "coverage_notes": "Data and talk minutes may vary by state, with enhanced offers in CA, KY, NE, TX, UT, WI.",
+                "additional_features": "Free Scam Block and Scam ID services, Option to bring your own phone."
+            },
+            {
+                "plan_name": "Data Peace of Mind Plan",
+                "price_per_month": "$10/year (low-cost add-on)",
+                "data": "7GB/month high-speed mobile hotspot data",
+                "voice": "N/A (add-on data plan)",
+                "text": "N/A (add-on data plan)",
+                "speed_notes": "High-speed mobile hotspot data",
+                "coverage_notes": null,
+                "additional_features": null
+            }
+        ]
+    },
+    {
+        "provider_name": "GLOBAL CONNECTION INC OF AMERICA",
+        "official_signup_urls": "http://www.connectwithglobal.com/en/index.aspx",
+        "customer_support_channels": {
+            "phone": "877-511-3009"
+        },
+        "plans": [
+            {
+                "plan_name": "Information not accessible",
+                "price_per_month": "N/A",
+                "data": "N/A",
+                "voice": "N/A",
+                "text": "N/A",
+                "speed_notes": "N/A",
+                "coverage_notes": "N/A",
+                "additional_features": "N/A"
+            }
+        ]
+    },
+    {
+        "provider_name": "AIR VOICE WIRELESS (AirTalk Wireless)",
+        "official_signup_urls": "https://airtalkwireless.com/apply",
+        "customer_support_channels": {
+            "phone": [
+                "+1 (206) 445-7825",
+                "+1 (855) 924-7825"
+            ],
+            "online": "Help Center, Check Status, Contact us sections",
+            "physical_stores": "Two locations in Houston, TX and Fountain Valley, CA"
+        },
+        "plans": [
+            {
+                "plan_name": "Standard Lifeline Service",
+                "price_per_month": "Free monthly service",
+                "data": "5G+ high-speed data (up to 10GB, varies by state)",
+                "voice": "Unlimited talk",
+                "text": "Unlimited text",
+                "speed_notes": "5G+ high-speed data",
+                "coverage_notes": "Nationwide coverage",
+                "additional_features": "Free smartphones (iPhone or Samsung), Free international calling to over 200 countries and territories, No activation fees, monthly charges, or hidden costs, Loyalty and trade-in programs, Free Wi-Fi Calling, multilingual customer support, no contracts."
+            }
+        ]
+    },
+    {
+        "provider_name": "TELSCAPE COMMUNICATIONS",
+        "official_signup_urls": "Not found in search results",
+        "customer_support_channels": "Not found",
+        "plans": [
+            {
+                "plan_name": "Information not available for consumer Lifeline signup",
+                "price_per_month": "N/A",
+                "data": "N/A",
+                "voice": "N/A",
+                "text": "N/A",
+                "speed_notes": "N/A",
+                "coverage_notes": "Operates only in California with Study Area Code 549011",
+                "additional_features": "N/A"
+            }
+        ]
+    },
+    {
+        "provider_name": "SAGE TELECOM COMMUNICATIONS",
+        "official_signup_urls": "Not found in search results",
+        "customer_support_channels": "Not found",
+        "plans": [
+            {
+                "plan_name": "Information not available for consumer Lifeline signup",
+                "price_per_month": "N/A",
+                "data": "N/A",
+                "voice": "N/A",
+                "text": "N/A",
+                "speed_notes": "N/A",
+                "coverage_notes": "N/A",
+                "additional_features": "N/A"
+            }
+        ]
+    },
+    {
+        "provider_name": "VERIZON",
+        "official_signup_urls": "https://www.verizon.com/solutions-and-services/lifeline/",
+        "customer_support_channels": {
+            "phone": "1-800-417-3849",
+            "online": "Support and Contact us links"
+        },
+        "plans": [
+            {
+                "plan_name": "Lifeline Discount (general)",
+                "price_per_month": "At least $9.25 per month discount on your Verizon Wireless monthly bill",
+                "data": "Variable (depends on chosen plan)",
+                "voice": "Variable (depends on chosen plan)",
+                "text": "Variable (depends on chosen plan)",
+                "speed_notes": null,
+                "coverage_notes": null,
+                "additional_features": null
+            },
+            {
+                "plan_name": "$25.00 Lifeline Plan",
+                "price_per_month": "$15.75/month (or $0 for residents of Federally Recognized Tribal Lands)",
+                "data": "No data service available",
+                "voice": "1,000 anytime minutes, Unlimited local mobile to mobile calling minutes",
+                "text": "Unlimited text messaging",
+                "speed_notes": null,
+                "coverage_notes": "Available in parts of Iowa, North Dakota, New York, and Wisconsin.",
+                "additional_features": "Domestic long distance calls from the local coverage area are included."
+            },
+            {
+                "plan_name": "$19.99 Home Phone Connect Plan",
+                "price_per_month": "$10.74/month (or $0 for residents of Federally Recognized Tribal Lands)",
+                "data": "N/A (home phone service)",
+                "voice": "Unlimited anytime minutes, Unlimited local mobile to mobile calling minutes",
+                "text": "N/A (home phone service)",
+                "speed_notes": null,
+                "coverage_notes": "Available in parts of Iowa, North Dakota, New York, and Wisconsin.",
+                "additional_features": "Requires a Home Phone Connect device. Domestic long distance calls from the local coverage area are included. Tribal Link Up assistance provides a 100% discount on the one-time customary activation fee for eligible Tribal Land subscribers."
+            }
+        ]
+    },
+    {
+        "provider_name": "TELRITE CORPORATION",
+        "official_signup_urls": "Not found in search results",
+        "customer_support_channels": "Not found",
+        "plans": [
+            {
+                "plan_name": "Information not available for consumer Lifeline signup",
+                "price_per_month": "N/A",
+                "data": "N/A",
+                "voice": "N/A",
+                "text": "N/A",
+                "speed_notes": "N/A",
+                "coverage_notes": "N/A",
+                "additional_features": "N/A"
+            }
+        ]
+    },
+    {
+        "provider_name": "SMITH BAGLEY",
+        "official_signup_urls": "Not found in search results",
+        "customer_support_channels": "Not found",
+        "plans": [
+            {
+                "plan_name": "Information not available for consumer Lifeline signup",
+                "price_per_month": "N/A",
+                "data": "N/A",
+                "voice": "N/A",
+                "text": "N/A",
+                "speed_notes": "N/A",
+                "coverage_notes": "N/A",
+                "additional_features": "N/A"
+            }
+        ]
+    }
+]

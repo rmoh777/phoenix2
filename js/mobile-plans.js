@@ -13,192 +13,140 @@
  */
 
 const MOBILE_PLANS = [
-    // Verizon Plans
+    // IM TELECOM Plans
     {
         id: 1,
-        name: "Unlimited Welcome",
-        carrier: "Verizon",
-        price: 65,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
-        hotspot: "No"
+        name: "Standard Plan",
+        carrier: "IM TELECOM (Excess Telecom)",
+        price: 0,
+        data: "4.5GB",
+        features: ["3,000 minutes", "Unlimited text", "Lifeline discount"],
+        hotspot: "Not specified"
     },
     {
         id: 2,
-        name: "Unlimited Plus",
-        carrier: "Verizon",
-        price: 80,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "25GB hotspot", "HD video"],
-        hotspot: "25GB"
+        name: "Advantage Plan", 
+        carrier: "IM TELECOM (Excess Telecom)",
+        price: 1,
+        data: "6.5GB",
+        features: ["3,000 minutes", "Unlimited text", "Lifeline discount"],
+        hotspot: "Not specified"
     },
     {
         id: 3,
-        name: "Unlimited Ultimate",
-        carrier: "Verizon",
-        price: 90,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "60GB hotspot", "4K video", "International calling"],
-        hotspot: "60GB"
+        name: "Kentucky Standard Plan",
+        carrier: "IM TELECOM (Excess Telecom)",
+        price: 0,
+        data: "4.5GB", 
+        features: ["Unlimited talk", "Unlimited text", "Kentucky only"],
+        hotspot: "Not specified"
     },
     {
         id: 4,
-        name: "5G Start",
-        carrier: "Verizon",
-        price: 70,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
-        hotspot: "No"
+        name: "California Standard Plan",
+        carrier: "IM TELECOM (Excess Telecom)",
+        price: 0,
+        data: "6GB",
+        features: ["Unlimited talk", "Unlimited text", "California only"],
+        hotspot: "Not specified"
     },
     {
         id: 5,
-        name: "5G Play More",
-        carrier: "Verizon",
-        price: 85,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "25GB hotspot", "Disney+ included"],
-        hotspot: "25GB"
+        name: "Tribal Standard Plan",
+        carrier: "IM TELECOM (Excess Telecom)",
+        price: 0,
+        data: "6GB",
+        features: ["3,000 minutes", "Unlimited text", "Qualifying Tribal Lands"],
+        hotspot: "Not specified"
     },
-
-    // T-Mobile Plans
     {
         id: 6,
-        name: "Essentials",
-        carrier: "T-Mobile",
-        price: 60,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
-        hotspot: "3G speeds"
+        name: "Tribal Advantage Plan",
+        carrier: "IM TELECOM (Excess Telecom)",
+        price: 1,
+        data: "8GB",
+        features: ["3,000 minutes", "Unlimited text", "Qualifying Tribal Lands"],
+        hotspot: "Not specified"
     },
+    
+    // TRACFONE WIRELESS Plans
     {
         id: 7,
-        name: "Magenta",
-        carrier: "T-Mobile",
-        price: 70,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "5GB hotspot", "Netflix included"],
-        hotspot: "5GB"
+        name: "Standard Lifeline Discount",
+        carrier: "TRACFONE WIRELESS",
+        price: 10,
+        data: "At least 4.5GB",
+        features: ["$10/month discount", "Caller ID", "Call Waiting", "Voicemail"],
+        hotspot: "Depends on plan"
     },
     {
         id: 8,
-        name: "Magenta MAX",
-        carrier: "T-Mobile",
-        price: 85,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "40GB hotspot", "Netflix included", "4K video"],
-        hotspot: "40GB"
+        name: "Tribal Lifeline Discount", 
+        carrier: "TRACFONE WIRELESS",
+        price: 0,
+        data: "At least 4.5GB",
+        features: ["Up to $35/month discount", "Qualifying Tribal Lands", "Caller ID"],
+        hotspot: "Depends on plan"
     },
+    
+    // ASSURANCE WIRELESS Plans
     {
         id: 9,
-        name: "Go5G",
-        carrier: "T-Mobile",
-        price: 75,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "15GB hotspot", "Apple TV+ included"],
-        hotspot: "15GB"
+        name: "Standard Lifeline Service",
+        carrier: "VIRGIN MOBILE USA (Assurance Wireless)", 
+        price: 0,
+        data: "4.5GB",
+        features: ["3,000 minutes", "Unlimited text", "Free monthly service"],
+        hotspot: "Not included"
     },
     {
         id: 10,
-        name: "Go5G Plus",
-        carrier: "T-Mobile",
-        price: 90,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "50GB hotspot", "Apple TV+ included", "4K video"],
-        hotspot: "50GB"
+        name: "Data Peace of Mind Plan",
+        carrier: "VIRGIN MOBILE USA (Assurance Wireless)",
+        price: 10,
+        data: "7GB/month hotspot",
+        features: ["Mobile hotspot data", "Annual payment option"],
+        hotspot: "7GB"
     },
-
-    // AT&T Plans
+    
+    // AIRTALK WIRELESS Plans
     {
         id: 11,
-        name: "Unlimited Starter",
-        carrier: "AT&T",
-        price: 65,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
-        hotspot: "No"
+        name: "Standard Lifeline Service",
+        carrier: "AIR VOICE WIRELESS (AirTalk Wireless)",
+        price: 0,
+        data: "Up to 10GB (varies by state)",
+        features: ["Unlimited talk", "Unlimited text", "5G+ high-speed", "Free smartphones"],
+        hotspot: "Not specified"
     },
+    
+    // VERIZON Plans
     {
         id: 12,
-        name: "Unlimited Extra",
-        carrier: "AT&T",
-        price: 75,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "15GB hotspot", "HBO Max included"],
-        hotspot: "15GB"
+        name: "Lifeline Discount (general)",
+        carrier: "VERIZON",
+        price: 9,
+        data: "Variable",
+        features: ["At least $9.25/month discount", "Depends on chosen plan"],
+        hotspot: "Depends on plan"
     },
     {
         id: 13,
-        name: "Unlimited Elite",
-        carrier: "AT&T",
-        price: 85,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "40GB hotspot", "HBO Max included", "4K video"],
-        hotspot: "40GB"
-    },
-    {
-        id: 14,
-        name: "Value Plus",
-        carrier: "AT&T",
-        price: 50,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
+        name: "$25.00 Lifeline Plan",
+        carrier: "VERIZON", 
+        price: 16,
+        data: "No data service",
+        features: ["1,000 anytime minutes", "Unlimited text", "Local mobile to mobile"],
         hotspot: "No"
     },
     {
-        id: 15,
-        name: "Premium",
-        carrier: "AT&T",
-        price: 80,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "30GB hotspot", "HBO Max included", "HD video"],
-        hotspot: "30GB"
-    },
-
-    // Budget Carrier Plans
-    {
-        id: 16,
-        name: "Unlimited",
-        carrier: "Visible",
-        price: 30,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
-        hotspot: "One device"
-    },
-    {
-        id: 17,
-        name: "Unlimited Plus",
-        carrier: "Visible",
-        price: 45,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "Unlimited hotspot", "HD video"],
-        hotspot: "Unlimited"
-    },
-    {
-        id: 18,
-        name: "Unlimited",
-        carrier: "Mint Mobile",
-        price: 30,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming"],
-        hotspot: "5GB"
-    },
-    {
-        id: 19,
-        name: "Unlimited Premium",
-        carrier: "Mint Mobile",
-        price: 40,
-        data: "Unlimited",
-        features: ["5G", "Premium streaming", "15GB hotspot", "HD video"],
-        hotspot: "15GB"
-    },
-    {
-        id: 20,
-        name: "Unlimited",
-        carrier: "Metro by T-Mobile",
-        price: 50,
-        data: "Unlimited",
-        features: ["5G", "Talk & Text", "Basic streaming", "Google One included"],
-        hotspot: "5GB"
+        id: 14,
+        name: "$19.99 Home Phone Connect Plan",
+        carrier: "VERIZON",
+        price: 11,
+        data: "N/A (home phone)",
+        features: ["Unlimited minutes", "Home phone service", "Requires device"],
+        hotspot: "N/A"
     }
 ];
 
