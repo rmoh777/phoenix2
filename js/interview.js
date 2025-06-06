@@ -36,9 +36,11 @@ async function getRecommendations() {
         });
 
         const recommendationData = await recommendationResponse.json();
+        console.log('Recommendation API Response:', recommendationData);
         
         if (!recommendationResponse.ok) {
-            throw new Error(recommendationData.error || 'Failed to get recommendations');
+            console.error('API Error Response:', recommendationResponse.status, recommendationData);
+            throw new Error(recommendationData.error || `API returned ${recommendationResponse.status}: Failed to get recommendations`);
         }
 
         // Parse the plan IDs and ranks
@@ -91,9 +93,11 @@ OVERALL_SUMMARY:
         });
 
         const explanationData = await explanationResponse.json();
+        console.log('Explanation API Response:', explanationData);
         
         if (!explanationResponse.ok) {
-            throw new Error(explanationData.error || 'Failed to get explanations');
+            console.error('Explanation API Error Response:', explanationResponse.status, explanationData);
+            throw new Error(explanationData.error || `API returned ${explanationResponse.status}: Failed to get explanations`);
         }
 
         // Parse explanations
@@ -117,10 +121,11 @@ OVERALL_SUMMARY:
         displayResults(recommendedPlans, planExplanations, overallSummary);
 
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error details:', error);
+        console.error('Error message:', error.message);
         document.getElementById('loading').style.display = 'none';
         document.getElementById('questionSection').style.display = 'block';
-        alert('Sorry, there was an error getting recommendations. Please try again.');
+        alert(`Sorry, there was an error getting recommendations: ${error.message}. Please check the console for details and try again.`);
     }
 }
 
