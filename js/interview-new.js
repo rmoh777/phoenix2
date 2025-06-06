@@ -153,10 +153,14 @@ Plans: ${JSON.stringify(window.MOBILE_PLANS)}`;
             throw new Error('Invalid plan recommendations received');
         }
 
-        return planMatches.map(match => ({
-            ...window.MOBILE_PLANS.find(plan => plan.id === match.id),
-            rank: match.rank
-        }));
+        return planMatches.map(match => {
+            const plan = window.MOBILE_PLANS.find(plan => plan.id === match.id);
+            return {
+                ...plan,
+                rank: match.rank,
+                companyName: plan.carrier // Assuming 'carrier' is the company name
+            };
+        });
     }
 
     async getPlanExplanations(userInput, plans) {
@@ -170,7 +174,7 @@ User's request: "${userInput}"
 
 Plans:
 ${plans.map(plan => `
-Plan ${plan.id} (${plan.rank}):
+Plan ${plan.companyName} (${plan.rank}):
 - Name: ${plan.name}
 - Carrier: ${plan.carrier}
 - Price: $${plan.price}/mo
@@ -181,7 +185,7 @@ Plan ${plan.id} (${plan.rank}):
 
 Format your response exactly like this:
 PLAN_EXPLANATIONS:
-${plans.map(plan => `Plan ${plan.id}: [Your explanation here]`).join('\n')}
+${plans.map(plan => `Plan ${plan.companyName}: [Your explanation here]`).join('\n')}
 
 OVERALL_SUMMARY:
 [Your summary here]`;
