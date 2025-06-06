@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', init);
 
 // Initialize the interview controller when the page loads (only on interview page)
 document.addEventListener('DOMContentLoaded', function() {
-    if (document.getElementById('stateSelect')) {
+    if (document.getElementById('requirements')) {
         window.interviewController = new InterviewController();
     }
 }); 
