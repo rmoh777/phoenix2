@@ -91,10 +91,10 @@ export default async function handler(req, res) {
     // Use retry logic instead of direct call
     const text = await callGeminiWithRetry(genAI, prompt, 3);
 
-    // Return the response
+    // Return the response in the format expected by client
     res.status(200).json({ 
       success: true, 
-      text: text,
+      text: text,  // This is what the client expects
       timestamp: new Date().toISOString()
     });
 
