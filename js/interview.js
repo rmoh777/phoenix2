@@ -9,15 +9,9 @@ userInput.addEventListener('input', function() {
 // Get recommendations from Gemini API
 async function getRecommendations() {
     const userInputText = document.getElementById('userInput').value.trim();
-    const apiKey = document.getElementById('apiKey').value.trim();
     
     if (!userInputText) {
         alert('Please enter your mobile plan requirements.');
-        return;
-    }
-
-    if (!apiKey) {
-        alert('Please enter your Gemini API Key.');
         return;
     }
 
@@ -29,7 +23,7 @@ async function getRecommendations() {
         // First API call - get plan recommendations
         const recommendationPrompt = `You are a mobile plan expert helping someone who might not be familiar with technical terms. Based on this request: "${userInputText}", recommend exactly 3 plan IDs from this list that best match the user's needs. Rank them as "Best", "Great", and "Good". Return ONLY the 3 plan IDs as comma-separated numbers with their rank (example: "1:Best,7:Great,12:Good"). Plans: ${JSON.stringify(MOBILE_PLANS)}`;
 
-        const recommendationResponse = await callGeminiAPI(apiKey, recommendationPrompt, 0.2, 100);
+        const recommendationResponse = await callGeminiAPI(recommendationPrompt, 0.2, 100);
         
         // Parse the plan IDs and ranks
         const planMatches = recommendationResponse.trim().split(',').map(item => {
@@ -44,7 +38,9 @@ async function getRecommendations() {
         });
 
         // Second API call - get explanations
-        const explanationPrompt = `You are a friendly mobile plan expert explaining things to someone who might not be familiar with technical terms. Use simple, everyday language that a high school student would understand. For each of these plans, provide:
+        const explanationPrompt = `You are a friendly mobile plan expert explaining things to someone who might not be familiar with technical terms. 
+Use simple, everyday language that a high school student would understand. 
+For each of these plans, provide:
 1. A brief explanation (1-2 sentences) of why this plan matches the user's needs
 2. A short summary of why these 3 plans were selected overall
 
@@ -68,89 +64,55 @@ ${recommendedPlans.map(plan => `Plan ${plan.id}: [Your explanation here]`).join(
 OVERALL_SUMMARY:
 [Your summary here]`;
 
-        const explanationResponse = await callGeminiAPI(apiKey, explanationPrompt, 0.7, 500);
+        const explanationResponse = await callGeminiAPI(explanationPrompt, 0.7, 500);
         
-        // Parse explanations
-        const explanationText = explanationResponse;
-        const planExplanations = {};
+        // Parse the explanations
+        const explanations = parseExplanations(explanationResponse);
         
-        // Extract individual plan explanations
-        const planMatches2 = explanationText.match(/Plan (\d+): (.*?)(?=\nPlan \d+:|$)/gs);
-        if (planMatches2) {
-            planMatches2.forEach(match => {
-                const [, planId, explanation] = match.match(/Plan (\d+): (.*)/);
-                planExplanations[planId] = explanation.trim();
-            });
-        }
-
-        // Extract overall summary
-        const summaryMatch = explanationText.match(/OVERALL_SUMMARY:\n(.*)/s);
-        const overallSummary = summaryMatch ? summaryMatch[1].trim() : '';
-
         // Display results
-        displayResults(recommendedPlans, planExplanations, overallSummary);
-
+        displayResults(recommendedPlans, explanations);
+        
     } catch (error) {
-        console.error('Error details:', error);
+        console.error('Error:', error);
+        alert('Sorry, there was an error processing your request. Please try again.');
+    } finally {
+        // Hide loading state
         document.getElementById('loading').style.display = 'none';
         document.getElementById('questionSection').style.display = 'block';
-        alert(`Error: ${error.message}. Please check your API key and try again.`);
     }
 }
 
-// Call the Gemini API directly
-async function callGeminiAPI(apiKey, prompt, temperature = 0.7, maxOutputTokens = 500) {
+// Call the Gemini API through our serverless endpoint
+async function callGeminiAPI(prompt, temperature = 0.7, maxOutputTokens = 500) {
     try {
-        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey, {
+        const response = await fetch('/api/gemini', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                contents: [
-                    {
-                        parts: [
-                            {
-                                text: prompt
-                            }
-                        ]
-                    }
-                ],
-                generationConfig: {
-                    temperature,
-                    topK: 40,
-                    topP: 0.95,
-                    maxOutputTokens,
-                }
+                prompt,
+                temperature,
+                maxOutputTokens
             })
         });
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error?.message || `API returned status ${response.status}`);
+            throw new Error(errorData.error || `API returned status ${response.status}`);
         }
 
         const data = await response.json();
-        console.log('Gemini API Response:', data);
-
-        if (!data.candidates || data.candidates.length === 0) {
-            throw new Error('No response from Gemini API');
-        }
-
-        // Extract the text from the response
-        return data.candidates[0].content.parts[0].text;
+        return data.text;
     } catch (error) {
         console.error('Gemini API Error:', error);
         throw error;
     }
 }
 
-function displayResults(plans, explanations, summary) {
+function displayResults(plans, explanations) {
     // Hide loading
     document.getElementById('loading').style.display = 'none';
-
-    // Set overall explanation
-    document.getElementById('explanationText').textContent = summary;
 
     // Create plan cards
     const plansGrid = document.getElementById('plansGrid');

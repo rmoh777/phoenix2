@@ -1,4 +1,3 @@
-
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 module.exports = async (req, res) => {
@@ -28,8 +27,16 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
-    const genAI = new GoogleGenerativeAI(process.env.GeminiKey2);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Get API key from environment variable
+    const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+    
+    if (!apiKey) {
+      console.error('GOOGLE_GEMINI_API_KEY not found in environment variables');
+      return res.status(500).json({ error: 'API configuration error' });
+    }
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const result = await model.generateContent({
       contents: [{ parts: [{ text: prompt }] }],
@@ -47,6 +54,9 @@ module.exports = async (req, res) => {
     return res.status(200).json({ text });
   } catch (error) {
     console.error('Gemini API Error:', error);
-    return res.status(500).json({ error: error.message || 'Internal server error' });
+    return res.status(500).json({ 
+      error: 'Failed to generate content',
+      details: error.message 
+    });
   }
 } 
