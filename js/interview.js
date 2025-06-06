@@ -94,9 +94,11 @@ OVERALL_SUMMARY:
     }
 }
 
-// Call the Gemini API through our serverless endpoint
+// Call the Gemini API directly
 async function callGeminiAPI(prompt, temperature = 0.7, maxOutputTokens = 500, retries = 3) {
-    const API_URL = '/api/gemini';  // Updated to use the new App Router endpoint
+    const API_KEY = 'AIzaSyBZpY3-IjZCgxF0a-nQ6Ovs4Pz6N6z1UM0';
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+    
     let lastError = null;
     
     for (let attempt = 1; attempt <= retries; attempt++) {
@@ -107,7 +109,13 @@ async function callGeminiAPI(prompt, temperature = 0.7, maxOutputTokens = 500, r
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ prompt })
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: prompt
+                        }]
+                    }]
+                })
             });
 
             console.log('Response status:', response.status);
@@ -126,27 +134,35 @@ async function callGeminiAPI(prompt, temperature = 0.7, maxOutputTokens = 500, r
 
             if (!response.ok) {
                 // If it's a 503 and retryable, wait and try again
-                if (response.status === 503 && data.retryable && attempt <= retries) {
-                    const waitTime = 2000 * attempt; // 2s, 4s
+                if (response.status === 503 && attempt < retries) {
+                    const waitTime = 2000 * attempt; // 2s, 4s, 6s
                     console.log(`API overloaded, retrying in ${waitTime}ms...`);
                     await new Promise(resolve => setTimeout(resolve, waitTime));
                     continue;
                 }
-                throw new Error(data.error || 'API request failed');
+                throw new Error(data.error?.message || 'API request failed');
             }
 
-            if (!data.success || !data.text) {
-                throw new Error('Invalid response format from API');
+            // Extract text from Gemini API response
+            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+                return data.candidates[0].content.parts[0].text;
+            } else {
+                throw new Error('Invalid response format from Gemini API');
             }
 
-            return data.text;
         } catch (error) {
             console.error(`Attempt ${attempt} failed:`, error);
-            if (attempt > retries) {
-                throw error;
+            lastError = error;
+            
+            if (attempt < retries) {
+                const waitTime = 1000 * attempt; // 1s, 2s, 3s
+                console.log(`Waiting ${waitTime}ms before retry...`);
+                await new Promise(resolve => setTimeout(resolve, waitTime));
             }
         }
     }
+    
+    throw lastError || new Error('All API attempts failed');
 }
 
 function displayResults(plans, explanations) {
