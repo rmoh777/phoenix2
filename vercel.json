@@ -1,6 +1,21 @@
 {
   "version": 2,
-  "framework": "nextjs",
-  "outputDirectory": ".",
-  "buildCommand": "npm run build"
+  "functions": {
+    "api/*.js": {
+      "runtime": "nodejs16.x"
+    },
+    "pages/api/*.js": {
+      "runtime": "nodejs16.x"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
 } 
