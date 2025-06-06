@@ -220,12 +220,12 @@ OVERALL_SUMMARY:
 
     parseExplanations(text) {
         const planExplanations = {};
-        const planMatches = text.match(/Plan (\d+): (.*?)(?=\nPlan \d+:|$)/gs);
+        const planMatches = text.match(/Plan (.+?): (.*?)(?=\nPlan .+?:|$)/gs);
         
         if (planMatches) {
             planMatches.forEach(match => {
-                const [_, planId, explanation] = match.match(/Plan (\d+): (.*)/);
-                planExplanations[planId] = explanation.trim();
+                const [_, companyName, explanation] = match.match(/Plan (.+?): (.*)/);
+                planExplanations[companyName] = explanation.trim();
             });
         }
 
