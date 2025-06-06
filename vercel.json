@@ -1,13 +1,23 @@
 {
   "version": 2,
-  "functions": {
-    "api/*.js": {
-      "runtime": "nodejs16.x"
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
     },
-    "pages/api/*.js": {
-      "runtime": "nodejs16.x"
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "css/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "js/**",
+      "use": "@vercel/static"
     }
-  },
+  ],
   "routes": [
     {
       "src": "/api/(.*)",
