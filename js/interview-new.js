@@ -9,9 +9,7 @@ class InterviewController {
         this.results = document.getElementById('results');
         this.findPlansBtn = document.getElementById('findPlansBtn');
         this.startOverBtn = document.getElementById('startOverBtn');
-        this.preferenceButtons = document.querySelectorAll('.preference-btn');
         
-        this.selectedPreferences = new Set();
         this.initializeEventListeners();
     }
 
@@ -27,20 +25,6 @@ class InterviewController {
         // Start Over button
         this.startOverBtn.addEventListener('click', () => {
             window.location.reload();
-        });
-
-        // Preference buttons
-        this.preferenceButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const preference = btn.dataset.preference;
-                if (this.selectedPreferences.has(preference)) {
-                    this.selectedPreferences.delete(preference);
-                    btn.classList.remove('active');
-                } else {
-                    this.selectedPreferences.add(preference);
-                    btn.classList.add('active');
-                }
-            });
         });
     }
 
@@ -115,9 +99,8 @@ class InterviewController {
     }
 
     buildPrompt(userInput) {
-        const preferences = Array.from(this.selectedPreferences).join(', ');
         const prompt = `You are a mobile plan expert helping someone who might not be familiar with technical terms. 
-Based on this request: "${userInput}"${preferences ? ` and these preferences: ${preferences}` : ''}, 
+Based on this request: "${userInput}", 
 recommend exactly 3 plan IDs from this list that best match the user's needs. 
 Rank them as "Best", "Great", and "Good". 
 Return ONLY the 3 plan IDs as comma-separated numbers with their rank (example: "1:Best,7:Great,12:Good"). 
