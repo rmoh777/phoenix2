@@ -166,6 +166,9 @@ Plans: ${JSON.stringify(window.MOBILE_PLANS)}`;
     async getPlanExplanations(userInput, plans) {
         const prompt = `You are a friendly mobile plan expert explaining things to someone who might not be familiar with technical terms. 
 Use simple, everyday language that a high school student would understand. 
+
+IMPORTANT: NEVER reference plan numbers, plan IDs, or say "Plan 1", "Plan 2", etc. ONLY use the company names when referring to specific plans.
+
 For each of these plans, provide:
 1. A brief explanation (1-2 sentences) of why this plan matches the user's needs
 2. A short summary of why these 3 plans were selected overall
@@ -174,8 +177,7 @@ User's request: "${userInput}"
 
 Plans:
 ${plans.map(plan => `
-Plan ${plan.companyName} (${plan.rank}):
-- Name: ${plan.name}
+${plan.companyName} ${plan.name} (${plan.rank}):
 - Carrier: ${plan.carrier}
 - Price: $${plan.price}/mo
 - Data: ${plan.data}
@@ -185,10 +187,10 @@ Plan ${plan.companyName} (${plan.rank}):
 
 Format your response exactly like this:
 PLAN_EXPLANATIONS:
-${plans.map(plan => `Plan ${plan.companyName}: [Your explanation here]`).join('\n')}
+${plans.map(plan => `${plan.companyName}: [Your explanation here - do NOT mention any plan numbers]`).join('\n')}
 
 OVERALL_SUMMARY:
-[Your summary here]`;
+[Your summary here - do NOT mention any plan numbers, only use company names]`;
 
         try {
             const response = await fetch('/api/gemini', {
@@ -220,16 +222,19 @@ OVERALL_SUMMARY:
 
     parseExplanations(text) {
         const planExplanations = {};
-        const planMatches = text.match(/Plan (.+?): (.*?)(?=\nPlan .+?:|$)/gs);
+        // Updated regex to handle company names without "Plan" prefix
+        const planMatches = text.match(/([A-Z\s]+(?:TELECOM|Telecom)?[^:]*): (.*?)(?=\n[A-Z\s]+(?:TELECOM|Telecom)?[^:]*:|$)/gs);
         
         if (planMatches) {
             planMatches.forEach(match => {
-                const [_, companyName, explanation] = match.match(/Plan (.+?): (.*)/);
-                planExplanations[companyName] = explanation.trim();
+                const [_, companyName, explanation] = match.match(/([A-Z\s]+(?:TELECOM|Telecom)?[^:]*): (.*)/s);
+                if (companyName && explanation) {
+                    planExplanations[companyName.trim()] = explanation.trim();
+                }
             });
         }
 
-        const summaryMatch = text.match(/OVERALL_SUMMARY:\n(.*)/s);
+        const summaryMatch = text.match(/OVERALL_SUMMARY:\s*\n(.*)/s);
         const summary = summaryMatch ? summaryMatch[1].trim() : '';
 
         return {
