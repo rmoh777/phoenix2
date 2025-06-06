@@ -85,20 +85,19 @@ OVERALL_SUMMARY:
 }
 
 // Call the Gemini API through our serverless endpoint
-async function callGeminiAPI(prompt, temperature = 0.7, maxOutputTokens = 500, retries = 2) {
-    for (let attempt = 1; attempt <= retries + 1; attempt++) {
+async function callGeminiAPI(prompt, temperature = 0.7, maxOutputTokens = 500, retries = 3) {
+    const API_URL = '/api/gemini';  // Updated to use the new App Router endpoint
+    let lastError = null;
+    
+    for (let attempt = 1; attempt <= retries; attempt++) {
         try {
-            console.log('Making API request with prompt:', prompt);
-            const response = await fetch('/api/gemini', {
+            console.log(`API call attempt ${attempt}/${retries}`);
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    prompt,
-                    temperature,
-                    maxOutputTokens
-                })
+                body: JSON.stringify({ prompt })
             });
 
             console.log('Response status:', response.status);
