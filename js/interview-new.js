@@ -256,7 +256,7 @@ OVERALL_SUMMARY:
                     <div class="plan-card">
                         <div class="plan-header">
                             <div class="rank-badge rank-${plan.rank.toLowerCase()}">${plan.rank}</div>
-                            <div class="carrier">${plan.carrier}</div>
+                            <div class="carrier">${plan.companyName}</div>
                             <div class="plan-name">${plan.name}</div>
                             <div class="price">$${plan.price}<span style="font-size:0.9rem;font-weight:400;">/mo</span></div>
                             ${plan.price === 0 ? '<div style="color: #22c55e; font-weight: bold; font-size: 0.9rem;">✓ FREE with Lifeline</div>' : ''}
@@ -267,7 +267,7 @@ OVERALL_SUMMARY:
                             <li>Hotspot: ${plan.hotspot}</li>
                         </ul>
                         <div class="plan-explanation">
-                            ${explanations.planExplanations[plan.id] || 'No explanation available.'}
+                            ${explanations.planExplanations[plan.companyName] || 'No explanation available.'}
                         </div>
                         <button class="plan-details-btn" tabindex="0">Check Eligibility & Apply</button>
                     </div>
