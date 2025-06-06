@@ -1,0 +1,26 @@
+{
+  "name": "gac-simple",
+  "version": "1.0.0",
+  "description": "A web application that helps users find the best Lifeline wireless plan based on their location and preferences.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rmoh777/GAC-Simple.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rmoh777/GAC-Simple/issues"
+  },
+  "homepage": "https://github.com/rmoh777/GAC-Simple#readme",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
+  }
+}
