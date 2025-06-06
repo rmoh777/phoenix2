@@ -2,267 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile Plan Finder - Georgia Connects</title>
-    <meta name="description" content="Find the perfect mobile plan for your needs with AI-powered recommendations.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>Find Your Lifeline Plan - Georgia Connects</title>
+    
+    <!-- Favicon and Touch Icons -->
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    
+    <!-- CSS -->
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/pages.css">
     <link rel="stylesheet" href="css/interview.css">
+    <link rel="stylesheet" href="css/results.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .mobile-plan-finder {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .finder-title {
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: #4F46E5;
-            margin-bottom: 0.5rem;
-        }
-
-        .finder-subtitle {
-            font-size: 1.1rem;
-            color: #6B7280;
-            margin-bottom: 3rem;
-        }
-
-        .question-section {
-            margin-bottom: 2rem;
-        }
-
-        .question-label {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .user-input {
-            width: 100%;
-            max-width: 600px;
-            height: 120px;
-            padding: 1rem;
-            border: 2px solid #E5E7EB;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            resize: vertical;
-            margin-bottom: 1rem;
-        }
-
-        .user-input:focus {
-            outline: none;
-            border-color: #4F46E5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
-
-        .char-count {
-            font-size: 0.875rem;
-            color: #6B7280;
-            text-align: right;
-            max-width: 600px;
-            margin: 0 auto 1.5rem;
-        }
-
-        .submit-btn {
-            background: #4F46E5;
-            color: white;
-            border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .submit-btn:hover {
-            background: #4338CA;
-        }
-
-        .submit-btn:disabled {
-            background: #9CA3AF;
-            cursor: not-allowed;
-        }
-
-        .loading {
-            display: none;
-            margin: 2rem 0;
-            color: #6B7280;
-        }
-
-        .results-section {
-            display: none;
-            margin-top: 3rem;
-        }
-
-        .explanation-box {
-            background: #EEF2FF;
-            border: 1px solid #C7D2FE;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            text-align: left;
-        }
-
-        .explanation-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #4F46E5;
-            margin-bottom: 1rem;
-        }
-
-        .explanation-text {
-            color: #374151;
-            line-height: 1.6;
-        }
-
-        .plans-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .plan-card {
-            background: white;
-            border: 1px solid #E5E7EB;
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: left;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .plan-rank {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-        }
-
-        .rank-best {
-            background: #DBEAFE;
-            color: #1E40AF;
-        }
-
-        .rank-great {
-            background: #D1FAE5;
-            color: #065F46;
-        }
-
-        .rank-good {
-            background: #FEF3C7;
-            color: #92400E;
-        }
-
-        .plan-carrier {
-            font-size: 0.875rem;
-            color: #6B7280;
-            margin-bottom: 0.25rem;
-        }
-
-        .plan-name {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #111827;
-            margin-bottom: 0.5rem;
-        }
-
-        .plan-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #4F46E5;
-            margin-bottom: 1rem;
-        }
-
-        .plan-features {
-            list-style: none;
-            margin-bottom: 1rem;
-        }
-
-        .plan-features li {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-            color: #374151;
-        }
-
-        .plan-features li::before {
-            content: "✓";
-            color: #10B981;
-            font-weight: bold;
-            margin-right: 0.5rem;
-        }
-
-        .plan-explanation {
-            background: #F9FAFB;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
-            color: #374151;
-            line-height: 1.5;
-        }
-
-        .plan-details-btn {
-            background: #4F46E5;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: background 0.2s;
-        }
-
-        .plan-details-btn:hover {
-            background: #4338CA;
-        }
-
-        .start-over-btn {
-            background: #6B7280;
-            color: white;
-            border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .start-over-btn:hover {
-            background: #4B5563;
-        }
-
-        @media (max-width: 768px) {
-            .mobile-plan-finder {
-                padding: 1rem;
-            }
-
-            .finder-title {
-                font-size: 2rem;
-            }
-
-            .plans-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
 <body>
     <header class="header">
@@ -276,6 +44,7 @@
                     <li><a href="about.html" class="nav-link">About</a></li>
                     <li><a href="news.html" class="nav-link">News</a></li>
                     <li><a href="data.html" class="nav-link">Data</a></li>
+                    <li><a href="interview.html" class="nav-link active">Find Your Plan</a></li>
                     <li><a href="contact.html" class="nav-link">Contact</a></li>
                 </ul>
                 <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">☰</button>
@@ -286,47 +55,51 @@
                 <li><a href="about.html" class="nav-link">About</a></li>
                 <li><a href="news.html" class="nav-link">News</a></li>
                 <li><a href="data.html" class="nav-link">Data</a></li>
+                <li><a href="interview.html" class="nav-link active">Find Your Plan</a></li>
                 <li><a href="contact.html" class="nav-link">Contact</a></li>
             </ul>
         </div>
     </header>
 
-    <main>
-        <div class="mobile-plan-finder">
-            <h1 class="finder-title">Mobile Plan Finder</h1>
-            <p class="finder-subtitle">Get personalized mobile plan recommendations powered by AI</p>
+    <main class="interview-container">
+        <!-- Breadcrumb Navigation -->
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> &gt; <span>Find Your Plan</span>
+        </div>
 
-            <div class="question-section" id="questionSection">
-                <label for="userInput" class="question-label">What are you looking for in a mobile plan?</label>
-                <textarea 
-                    id="userInput" 
-                    class="user-input" 
-                    placeholder="lifeline"
-                    maxlength="500"
-                ></textarea>
-                <div class="char-count">
-                    <span id="charCount">0</span>/500
-                </div>
-                <button id="submitBtn" class="submit-btn" onclick="getRecommendations()">
-                    Get Recommendations
-                </button>
-            </div>
+        <!-- Error Container -->
+        <div id="errorContainer" class="error-container" style="display: none;"></div>
 
-            <div class="loading" id="loading">
-                <p>Finding the best plans for you...</p>
-            </div>
+        <!-- Main Content -->
+        <div class="container">
+            <header class="interview-header">
+                <h1>Mobile Plan Finder</h1>
+                <p class="description">Get personalized mobile plan recommendations powered by AI</p>
+            </header>
 
-            <div class="results-section" id="resultsSection">
-                <div class="explanation-box">
-                    <h2 class="explanation-title">Why These Plans?</h2>
-                    <div class="explanation-text" id="explanationText"></div>
+            <form id="planForm" class="interview-form">
+                <div class="form-group">
+                    <label for="requirements">What are you looking for in a mobile plan?</label>
+                    <textarea id="requirements" rows="4" required 
+                        placeholder="Example: I need unlimited data for streaming, international calling, and a family plan for 4 people"
+                        maxlength="500"></textarea>
+                    <div class="char-counter"><span id="charCount">0</span>/500</div>
                 </div>
 
-                <div class="plans-grid" id="plansGrid"></div>
+                <div class="form-actions">
+                    <button type="submit" id="findPlansBtn" class="btn btn--primary">Find My Plans</button>
+                    <button type="button" id="startOverBtn" class="btn btn--secondary" style="display:none;">Start Over</button>
+                </div>
+            </form>
 
-                <button class="start-over-btn" onclick="startOver()">Start Over</button>
+            <div class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Finding the perfect plans for you...</p>
             </div>
 
+            <div class="error" id="errorMessage" style="display: none;"></div>
+
+            <div class="results" id="results" style="display: none;"></div>
         </div>
     </main>
 
@@ -356,8 +129,16 @@
         </div>
     </footer>
 
-    <script src="js/main.js"></script>
+    <!-- JavaScript -->
     <script src="js/mobile-plans.js"></script>
+    <script src="js/lifeline-providers.js"></script>
+    <script src="config/api-config.js"></script>
+    <script src="js/state-manager.js"></script>
+    <script src="js/gemini-service.js"></script>
+    <script src="js/results-renderer.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/session-manager.js"></script>
     <script src="js/interview.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html> 

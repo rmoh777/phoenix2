@@ -10,6 +10,7 @@
  * - data: Data allowance description
  * - features: Array of features included in the plan
  * - hotspot: Hotspot capability description
+ * - websiteUrl: URL to the carrier's website for plan details
  */
 
 const MOBILE_PLANS = [
@@ -21,7 +22,8 @@ const MOBILE_PLANS = [
         price: 0,
         data: "4.5GB",
         features: ["3,000 minutes", "Unlimited text", "Lifeline discount"],
-        hotspot: "Not specified"
+        hotspot: "Not specified",
+        websiteUrl: "https://www.excesstelecom.com/plans/lifeline"
     },
     {
         id: 2,
@@ -30,7 +32,8 @@ const MOBILE_PLANS = [
         price: 1,
         data: "6.5GB",
         features: ["3,000 minutes", "Unlimited text", "Lifeline discount"],
-        hotspot: "Not specified"
+        hotspot: "Not specified",
+        websiteUrl: "https://www.excesstelecom.com/plans/lifeline"
     },
     {
         id: 3,
@@ -39,7 +42,8 @@ const MOBILE_PLANS = [
         price: 0,
         data: "4.5GB", 
         features: ["Unlimited talk", "Unlimited text", "Kentucky only"],
-        hotspot: "Not specified"
+        hotspot: "Not specified",
+        websiteUrl: "https://www.excesstelecom.com/plans/lifeline"
     },
     {
         id: 4,
@@ -48,7 +52,8 @@ const MOBILE_PLANS = [
         price: 0,
         data: "6GB",
         features: ["Unlimited talk", "Unlimited text", "California only"],
-        hotspot: "Not specified"
+        hotspot: "Not specified",
+        websiteUrl: "https://www.excesstelecom.com/plans/lifeline"
     },
     {
         id: 5,
@@ -57,7 +62,8 @@ const MOBILE_PLANS = [
         price: 0,
         data: "6GB",
         features: ["3,000 minutes", "Unlimited text", "Qualifying Tribal Lands"],
-        hotspot: "Not specified"
+        hotspot: "Not specified",
+        websiteUrl: "https://www.excesstelecom.com/plans/lifeline"
     },
     {
         id: 6,
@@ -66,7 +72,8 @@ const MOBILE_PLANS = [
         price: 1,
         data: "8GB",
         features: ["3,000 minutes", "Unlimited text", "Qualifying Tribal Lands"],
-        hotspot: "Not specified"
+        hotspot: "Not specified",
+        websiteUrl: "https://www.excesstelecom.com/plans/lifeline"
     },
     
     // TRACFONE WIRELESS Plans
@@ -77,7 +84,8 @@ const MOBILE_PLANS = [
         price: 10,
         data: "At least 4.5GB",
         features: ["$10/month discount", "Caller ID", "Call Waiting", "Voicemail"],
-        hotspot: "Depends on plan"
+        hotspot: "Depends on plan",
+        websiteUrl: "https://www.tracfonewirelessinc.com/en/lifeline"
     },
     {
         id: 8,
@@ -86,7 +94,8 @@ const MOBILE_PLANS = [
         price: 0,
         data: "At least 4.5GB",
         features: ["Up to $35/month discount", "Qualifying Tribal Lands", "Caller ID"],
-        hotspot: "Depends on plan"
+        hotspot: "Depends on plan",
+        websiteUrl: "https://www.tracfonewirelessinc.com/en/lifeline"
     },
     
     // ASSURANCE WIRELESS Plans
@@ -97,7 +106,8 @@ const MOBILE_PLANS = [
         price: 0,
         data: "4.5GB",
         features: ["3,000 minutes", "Unlimited text", "Free monthly service"],
-        hotspot: "Not included"
+        hotspot: "Not included",
+        websiteUrl: "https://www.assurancewireless.com/"
     },
     {
         id: 10,
@@ -106,7 +116,8 @@ const MOBILE_PLANS = [
         price: 10,
         data: "7GB/month hotspot",
         features: ["Mobile hotspot data", "Annual payment option"],
-        hotspot: "7GB"
+        hotspot: "7GB",
+        websiteUrl: "https://www.assurancewireless.com/"
     },
     
     // AIRTALK WIRELESS Plans
@@ -117,7 +128,8 @@ const MOBILE_PLANS = [
         price: 0,
         data: "Up to 10GB (varies by state)",
         features: ["Unlimited talk", "Unlimited text", "5G+ high-speed", "Free smartphones"],
-        hotspot: "Not specified"
+        hotspot: "Not specified",
+        websiteUrl: "https://airtalkwireless.com/apply"
     },
     
     // VERIZON Plans
@@ -128,7 +140,8 @@ const MOBILE_PLANS = [
         price: 9,
         data: "Variable",
         features: ["At least $9.25/month discount", "Depends on chosen plan"],
-        hotspot: "Depends on plan"
+        hotspot: "Depends on plan",
+        websiteUrl: "https://www.verizon.com/solutions-and-services/lifeline/"
     },
     {
         id: 13,
@@ -137,7 +150,8 @@ const MOBILE_PLANS = [
         price: 16,
         data: "No data service",
         features: ["1,000 anytime minutes", "Unlimited text", "Local mobile to mobile"],
-        hotspot: "No"
+        hotspot: "No",
+        websiteUrl: "https://www.verizon.com/solutions-and-services/lifeline/"
     },
     {
         id: 14,
@@ -146,7 +160,8 @@ const MOBILE_PLANS = [
         price: 11,
         data: "N/A (home phone)",
         features: ["Unlimited minutes", "Home phone service", "Requires device"],
-        hotspot: "N/A"
+        hotspot: "N/A",
+        websiteUrl: "https://www.verizon.com/solutions-and-services/lifeline/"
     }
 ];
 
