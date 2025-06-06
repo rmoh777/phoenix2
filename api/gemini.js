@@ -17,6 +17,7 @@ module.exports = async (req, res) => {
   }
 
   if (req.method !== 'POST') {
+    console.error('Invalid method:', req.method);
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
@@ -24,6 +25,7 @@ module.exports = async (req, res) => {
     const { prompt, temperature = 0.7, maxOutputTokens = 500 } = req.body;
 
     if (!prompt) {
+      console.error('No prompt provided in request body');
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
@@ -32,12 +34,17 @@ module.exports = async (req, res) => {
     
     if (!apiKey) {
       console.error('GOOGLE_GEMINI_API_KEY not found in environment variables');
-      return res.status(500).json({ error: 'API configuration error' });
+      return res.status(500).json({ 
+        error: 'API configuration error',
+        details: 'API key not found in environment variables'
+      });
     }
 
+    console.log('Initializing Gemini API with key length:', apiKey.length);
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
+    console.log('Generating content with prompt length:', prompt.length);
     const result = await model.generateContent({
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: {
@@ -50,13 +57,15 @@ module.exports = async (req, res) => {
 
     const response = await result.response;
     const text = response.text();
+    console.log('Successfully generated response with length:', text.length);
 
     return res.status(200).json({ text });
   } catch (error) {
     console.error('Gemini API Error:', error);
     return res.status(500).json({ 
       error: 'Failed to generate content',
-      details: error.message 
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 } 
