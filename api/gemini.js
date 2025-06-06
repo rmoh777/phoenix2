@@ -1,6 +1,12 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 module.exports = async (req, res) => {
+  console.log('API Request received:', {
+    method: req.method,
+    headers: req.headers,
+    body: req.body
+  });
+
   // Set CORS headers to allow requests from your domain
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -12,6 +18,7 @@ module.exports = async (req, res) => {
 
   // Handle preflight request
   if (req.method === 'OPTIONS') {
+    console.log('Handling OPTIONS request');
     res.status(200).end();
     return;
   }
@@ -23,6 +30,7 @@ module.exports = async (req, res) => {
 
   try {
     const { prompt, temperature = 0.7, maxOutputTokens = 500 } = req.body;
+    console.log('Request parameters:', { prompt, temperature, maxOutputTokens });
 
     if (!prompt) {
       console.error('No prompt provided in request body');
@@ -31,6 +39,7 @@ module.exports = async (req, res) => {
 
     // Get API key from environment variable
     const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+    console.log('API Key present:', !!apiKey);
     
     if (!apiKey) {
       console.error('GOOGLE_GEMINI_API_KEY not found in environment variables');
@@ -61,7 +70,11 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({ text });
   } catch (error) {
-    console.error('Gemini API Error:', error);
+    console.error('Gemini API Error:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
     return res.status(500).json({ 
       error: 'Failed to generate content',
       details: error.message,
