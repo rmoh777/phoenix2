@@ -74,7 +74,9 @@ OVERALL_SUMMARY:
         
     } catch (error) {
         console.error('Error:', error);
-        alert('Sorry, there was an error processing your request. Please try again.');
+        // Show more detailed error message
+        const errorMessage = error.message || 'Unknown error occurred';
+        alert(`Error: ${errorMessage}\n\nPlease try again or contact support if the problem persists.`);
     } finally {
         // Hide loading state
         document.getElementById('loading').style.display = 'none';
@@ -97,12 +99,17 @@ async function callGeminiAPI(prompt, temperature = 0.7, maxOutputTokens = 500) {
             })
         });
 
+        const data = await response.json();
+        
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || `API returned status ${response.status}`);
+            console.error('API Error Response:', data);
+            throw new Error(data.error || data.details || `API returned status ${response.status}`);
         }
 
-        const data = await response.json();
+        if (!data.text) {
+            throw new Error('Invalid response format from API');
+        }
+
         return data.text;
     } catch (error) {
         console.error('Gemini API Error:', error);
