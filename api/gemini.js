@@ -1,10 +1,24 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Initialize the Gemini API with your API key
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GeminiAPI);
 
-// Handle the API request
-async function handleRequest(req, res) {
+module.exports = async (req, res) => {
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    );
+
+    // Handle OPTIONS request
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
+
     // Only allow POST requests
     if (req.method !== 'POST') {
         res.status(405).json({ error: 'Method not allowed' });
@@ -38,17 +52,6 @@ async function handleRequest(req, res) {
         res.status(200).json({ text });
     } catch (error) {
         console.error('Error:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Internal server error', details: error.message });
     }
-}
-
-// Export the handler based on the environment
-if (typeof exports !== 'undefined') {
-    if (typeof module !== 'undefined' && module.exports) {
-        // Node.js environment
-        module.exports = handleRequest;
-    } else {
-        // Browser environment
-        exports.handleRequest = handleRequest;
-    }
-} 
+}; 
