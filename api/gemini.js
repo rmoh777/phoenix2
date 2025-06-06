@@ -3,25 +3,21 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 // Initialize the Gemini API with your API key
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-exports.handler = async function(event, context) {
+// Handle the API request
+async function handleRequest(req, res) {
     // Only allow POST requests
-    if (event.httpMethod !== 'POST') {
-        return {
-            statusCode: 405,
-            body: JSON.stringify({ error: 'Method not allowed' })
-        };
+    if (req.method !== 'POST') {
+        res.status(405).json({ error: 'Method not allowed' });
+        return;
     }
 
     try {
         // Parse the request body
-        const body = JSON.parse(event.body);
-        const { prompt, temperature = 0.7, maxOutputTokens = 500 } = body;
+        const { prompt, temperature = 0.7, maxOutputTokens = 500 } = req.body;
 
         if (!prompt) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({ error: 'Prompt is required' })
-            };
+            res.status(400).json({ error: 'Prompt is required' });
+            return;
         }
 
         // Get the model
@@ -39,15 +35,20 @@ exports.handler = async function(event, context) {
         const response = await result.response;
         const text = response.text();
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ text })
-        };
+        res.status(200).json({ text });
     } catch (error) {
         console.error('Error:', error);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'Internal server error' })
-        };
+        res.status(500).json({ error: 'Internal server error' });
     }
-}; 
+}
+
+// Export the handler based on the environment
+if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+        // Node.js environment
+        module.exports = handleRequest;
+    } else {
+        // Browser environment
+        exports.handleRequest = handleRequest;
+    }
+} 
