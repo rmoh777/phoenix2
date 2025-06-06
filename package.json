@@ -1,22 +1,25 @@
 {
-  "name": "gac-simple",
+  "name": "ga-connects-mobile-plan-finder",
   "version": "1.0.0",
-  "description": "A web application that helps users find the best Lifeline wireless plan based on their location and preferences.",
-  "main": "index.js",
-  "type": "module",
+  "description": "Mobile Plan Finder for Georgia Connects - AI-powered mobile plan recommendations",
+  "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vercel dev",
+    "deploy": "vercel"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rmoh777/GAC-Simple.git"
+  "keywords": [
+    "mobile plans",
+    "georgia connects",
+    "ai recommendations",
+    "gemini api"
+  ],
+  "author": "Georgia Connects",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.17.1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/rmoh777/GAC-Simple/issues"
-  },
-  "homepage": "https://github.com/rmoh777/GAC-Simple#readme",
-  "dependencies": {}
-}
+  "devDependencies": {
+    "vercel": "^33.0.0"
+  }
+} 
+
