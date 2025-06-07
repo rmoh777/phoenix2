@@ -55,15 +55,24 @@ class InterviewController {
         const prompt = this.buildPrompt(userInput);
 
         try {
-            const response = await fetch('/api/gemini', {
+            const API_KEY = 'AIzaSyBZpY3-IjZCgxF0a-nQ6Ovs4Pz6N6z1UM0';
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    prompt,
-                    temperature: 0.2,
-                    maxOutputTokens: 100
+                    contents: [{
+                        parts: [{
+                            text: prompt
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.2,
+                        maxOutputTokens: 100
+                    }
                 })
             });
 
@@ -73,12 +82,14 @@ class InterviewController {
             }
 
             const data = await response.json();
-            if (!data.text) {
+            if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
                 throw new Error('Invalid response format from Gemini API');
             }
 
+            const responseText = data.candidates[0].content.parts[0].text;
+
             // Parse the response text to extract plan IDs and ranks
-            const planMatches = this.parsePlanMatches(data.text);
+            const planMatches = this.parsePlanMatches(responseText);
             if (!planMatches || planMatches.length !== 3) {
                 throw new Error('Invalid plan recommendations received');
             }
@@ -188,15 +199,24 @@ ${plan.companyName} ${plan.name}: $${plan.price}/mo, ${plan.data}, ${plan.featur
 Respond in exact format shown above.`;
 
         try {
-            const response = await fetch('/api/gemini', {
+            const API_KEY = 'AIzaSyBZpY3-IjZCgxF0a-nQ6Ovs4Pz6N6z1UM0';
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    prompt,
-                    temperature: 0.1,
-                    maxOutputTokens: 100
+                    contents: [{
+                        parts: [{
+                            text: prompt
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.1,
+                        maxOutputTokens: 100
+                    }
                 })
             });
 
@@ -205,7 +225,8 @@ Respond in exact format shown above.`;
             }
 
             const data = await response.json();
-            return this.parseExplanations(data.text);
+            const responseText = data.candidates[0].content.parts[0].text;
+            return this.parseExplanations(responseText);
         } catch (error) {
             console.error('Error getting explanations:', error);
             return {
