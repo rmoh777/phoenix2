@@ -216,26 +216,49 @@ Respond in exact format shown above.`;
     }
 
     parseExplanations(text) {
-        const planExplanations = {};
-        // Parse plan explanations with the new format
-        const planMatches = text.match(/([A-Z\s]+(?:TELECOM|Telecom)?[^:]*): (.*?)(?=\n[A-Z\s]+(?:TELECOM|Telecom)?[^:]*:|SUMMARY:|$)/gs);
+        console.log("RAW GEMINI RESPONSE:", text); // DEBUG: See what Gemini actually returns
         
-        if (planMatches) {
-            planMatches.forEach(match => {
-                const [_, companyName, explanation] = match.match(/([A-Z\s]+(?:TELECOM|Telecom)?[^:]*): (.*)/s);
-                if (companyName && explanation) {
-                    planExplanations[companyName.trim()] = explanation.trim();
-                }
-            });
-        }
+        const planExplanations = {};
+        let summary = '';
 
-        // Parse summary with new format
-        const summaryMatch = text.match(/SUMMARY:\s*(.*?)(?:\n|$)/s);
-        let summary = summaryMatch ? summaryMatch[1].trim() : '';
+        try {
+            // Split response into sections
+            const sections = text.split('SUMMARY:');
+            const planSection = sections[0];
+            const summarySection = sections[1];
+
+            // Parse PLAN_EXPLANATIONS section
+            if (planSection.includes('PLAN_EXPLANATIONS:')) {
+                const explanationText = planSection.split('PLAN_EXPLANATIONS:')[1];
+                const lines = explanationText.split('\n').filter(line => line.trim());
+                
+                lines.forEach(line => {
+                    if (line.includes(':')) {
+                        const [company, explanation] = line.split(':').map(s => s.trim());
+                        if (company && explanation) {
+                            planExplanations[company] = explanation;
+                        }
+                    }
+                });
+            }
+
+            // Parse SUMMARY section
+            if (summarySection) {
+                summary = summarySection.trim();
+            }
+
+            console.log("PARSED EXPLANATIONS:", planExplanations); // DEBUG
+            console.log("PARSED SUMMARY:", summary); // DEBUG
+
+        } catch (error) {
+            console.error("Parsing error:", error);
+            // Fallback: create short explanations manually
+            summary = "These plans offer affordable connectivity options.";
+        }
 
         return {
             planExplanations,
-            summary
+            summary: summary || "Great affordable mobile plan options selected for you."
         };
     }
 
