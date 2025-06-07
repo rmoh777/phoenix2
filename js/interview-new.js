@@ -164,14 +164,13 @@ Plans: ${JSON.stringify(window.MOBILE_PLANS)}`;
     }
 
     async getPlanExplanations(userInput, plans) {
-        const prompt = `You are a friendly mobile plan expert explaining things to someone who might not be familiar with technical terms. 
-Use simple, everyday language that a high school student would understand. 
+        const prompt = `You are a friendly mobile plan expert explaining things in casual, everyday language. 
+Keep everything brief and to the point - no unnecessary words or fluff.
 
 IMPORTANT: NEVER reference plan numbers, plan IDs, or say "Plan 1", "Plan 2", etc. ONLY use the company names when referring to specific plans.
 
-For each of these plans, provide:
-1. A brief explanation (1-2 sentences) of why this plan matches the user's needs
-2. A short summary of why these 3 plans were selected overall
+For each plan, write exactly 1-2 sentences max explaining why it matches the user's needs. Be casual and direct.
+Also provide a brief summary (max 2 sentences) of why these 3 plans work well together.
 
 User's request: "${userInput}"
 
@@ -187,10 +186,10 @@ ${plan.companyName} ${plan.name} (${plan.rank}):
 
 Format your response exactly like this:
 PLAN_EXPLANATIONS:
-${plans.map(plan => `${plan.companyName}: [Your explanation here - do NOT mention any plan numbers]`).join('\n')}
+${plans.map(plan => `${plan.companyName}: [1-2 sentences max - casual tone, no plan numbers]`).join('\n')}
 
 OVERALL_SUMMARY:
-[Your summary here - do NOT mention any plan numbers, only use company names]`;
+[Exactly 2 sentences max explaining why these plans work together. Casual tone, no plan numbers, only company names.]`;
 
         try {
             const response = await fetch('/api/gemini', {
@@ -201,7 +200,7 @@ OVERALL_SUMMARY:
                 body: JSON.stringify({
                     prompt,
                     temperature: 0.7,
-                    maxOutputTokens: 500
+                    maxOutputTokens: 400
                 })
             });
 
