@@ -296,36 +296,30 @@
             <h1 class="finder-title">Mobile Plan Finder</h1>
             <p class="finder-subtitle">Get personalized mobile plan recommendations powered by AI</p>
 
-            <div class="question-section" id="questionSection">
-                <label for="userInput" class="question-label">What are you looking for in a mobile plan?</label>
+            <form id="planForm" class="question-section">
+                <label for="requirements" class="question-label">What are you looking for in a mobile plan?</label>
                 <textarea 
-                    id="userInput" 
+                    id="requirements" 
                     class="user-input" 
-                    placeholder="lifeline"
+                    placeholder="I need a lot of data and text messages"
                     maxlength="500"
                 ></textarea>
                 <div class="char-count">
                     <span id="charCount">0</span>/500
                 </div>
-                <button id="submitBtn" class="submit-btn" onclick="getRecommendations()">
+                <button type="submit" id="findPlansBtn" class="submit-btn">
                     Get Recommendations
                 </button>
-            </div>
+                <button type="button" id="startOverBtn" class="start-over-btn" style="display:none;">Start Over</button>
+            </form>
 
-            <div class="loading" id="loading">
+            <div class="loading" style="display: none;">
                 <p>Finding the best plans for you...</p>
             </div>
 
-            <div class="results-section" id="resultsSection">
-                <div class="explanation-box">
-                    <h2 class="explanation-title">Why These Plans?</h2>
-                    <div class="explanation-text" id="explanationText"></div>
-                </div>
+            <div class="error" id="errorMessage" style="display: none;"></div>
 
-                <div class="plans-grid" id="plansGrid"></div>
-
-                <button class="start-over-btn" onclick="startOver()">Start Over</button>
-            </div>
+            <div class="results" id="results" style="display: none;"></div>
 
         </div>
     </main>
@@ -358,6 +352,6 @@
 
     <script src="js/main.js"></script>
     <script src="js/mobile-plans.js"></script>
-    <script src="js/interview.js"></script>
+    <script src="js/interview-new.js"></script>
 </body>
 </html> 
