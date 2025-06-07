@@ -164,32 +164,40 @@ Plans: ${JSON.stringify(window.MOBILE_PLANS)}`;
     }
 
     async getPlanExplanations(userInput, plans) {
-        const prompt = `You are a friendly mobile plan expert explaining things in casual, everyday language. 
-Keep everything brief and to the point - no unnecessary words or fluff.
+        const prompt = `CRITICAL CONSTRAINT: You MUST write exactly 2 short sentences maximum for the overall summary. Any longer response will be REJECTED.
 
-IMPORTANT: NEVER reference plan numbers, plan IDs, or say "Plan 1", "Plan 2", etc. ONLY use the company names when referring to specific plans.
+STRICT RULES:
+- Individual plan explanations: 1 sentence only 
+- Overall summary: EXACTLY 2 sentences maximum
+- Use casual, everyday language
+- NO plan numbers or IDs - only company names
 
-For each plan, write exactly 1-2 sentences max explaining why it matches the user's needs. Be casual and direct.
-Also provide a brief summary (max 2 sentences) of why these 3 plans work well together.
+EXAMPLE FORMAT YOU MUST FOLLOW:
+PLAN_EXPLANATIONS:
+IM TELECOM: Great plan with lots of data for just $1.
+IM TELECOM: Solid option with unlimited data and decent price.
+IM TELECOM: Free plan that gives you 6GB and unlimited texts.
 
-User's request: "${userInput}"
+OVERALL_SUMMARY:
+These plans all give you tons of data and unlimited texts for super cheap prices. The main differences are just the cost and whether you qualify for free service.
+
+User request: "${userInput}"
 
 Plans:
 ${plans.map(plan => `
 ${plan.companyName} ${plan.name} (${plan.rank}):
-- Carrier: ${plan.carrier}
 - Price: $${plan.price}/mo
 - Data: ${plan.data}
 - Features: ${plan.features.join(', ')}
-- Hotspot: ${plan.hotspot}
 `).join('\n')}
 
-Format your response exactly like this:
+RESPOND IN EXACT FORMAT SHOWN ABOVE. 2 SENTENCES MAX FOR SUMMARY OR YOUR RESPONSE WILL BE REJECTED.
+
 PLAN_EXPLANATIONS:
-${plans.map(plan => `${plan.companyName}: [1-2 sentences max - casual tone, no plan numbers]`).join('\n')}
+${plans.map(plan => `${plan.companyName}: [1 sentence only]`).join('\n')}
 
 OVERALL_SUMMARY:
-[Exactly 2 sentences max explaining why these plans work together. Casual tone, no plan numbers, only company names.]`;
+[EXACTLY 2 sentences maximum explaining why these plans work together]`;
 
         try {
             const response = await fetch('/api/gemini', {
@@ -199,8 +207,8 @@ OVERALL_SUMMARY:
                 },
                 body: JSON.stringify({
                     prompt,
-                    temperature: 0.7,
-                    maxOutputTokens: 400
+                    temperature: 0.3,
+                    maxOutputTokens: 150
                 })
             });
 
@@ -228,13 +236,29 @@ OVERALL_SUMMARY:
             planMatches.forEach(match => {
                 const [_, companyName, explanation] = match.match(/([A-Z\s]+(?:TELECOM|Telecom)?[^:]*): (.*)/s);
                 if (companyName && explanation) {
-                    planExplanations[companyName.trim()] = explanation.trim();
+                    // Truncate to 1 sentence if too long
+                    let truncatedExplanation = explanation.trim();
+                    const sentences = truncatedExplanation.split(/[.!?]+/);
+                    if (sentences.length > 1) {
+                        truncatedExplanation = sentences[0] + '.';
+                    }
+                    planExplanations[companyName.trim()] = truncatedExplanation;
                 }
             });
         }
 
         const summaryMatch = text.match(/OVERALL_SUMMARY:\s*\n(.*)/s);
-        const summary = summaryMatch ? summaryMatch[1].trim() : '';
+        let summary = summaryMatch ? summaryMatch[1].trim() : '';
+        
+        // FORCE 2 sentence maximum - truncate if longer
+        if (summary) {
+            const sentences = summary.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            if (sentences.length > 2) {
+                summary = sentences.slice(0, 2).join('. ') + '.';
+            } else if (sentences.length <= 2) {
+                summary = sentences.join('. ') + '.';
+            }
+        }
 
         return {
             planExplanations,
