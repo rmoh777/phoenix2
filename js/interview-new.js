@@ -55,15 +55,24 @@ class InterviewController {
         const prompt = this.buildPrompt(userInput);
 
         try {
-            const response = await fetch('/api/gemini', {
+            const API_KEY = 'AIzaSyBZpY3-IjZCgxF0a-nQ6Ovs4Pz6N6z1UM0';
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    prompt,
-                    temperature: 0.2,
-                    maxOutputTokens: 100
+                    contents: [{
+                        parts: [{
+                            text: prompt
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.2,
+                        maxOutputTokens: 100
+                    }
                 })
             });
 
@@ -73,12 +82,14 @@ class InterviewController {
             }
 
             const data = await response.json();
-            if (!data.text) {
+            if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
                 throw new Error('Invalid response format from Gemini API');
             }
 
+            const responseText = data.candidates[0].content.parts[0].text;
+
             // Parse the response text to extract plan IDs and ranks
-            const planMatches = this.parsePlanMatches(data.text);
+            const planMatches = this.parsePlanMatches(responseText);
             if (!planMatches || planMatches.length !== 3) {
                 throw new Error('Invalid plan recommendations received');
             }
@@ -164,44 +175,48 @@ Plans: ${JSON.stringify(window.MOBILE_PLANS)}`;
     }
 
     async getPlanExplanations(userInput, plans) {
-        const prompt = `You are a friendly mobile plan expert explaining things to someone who might not be familiar with technical terms. 
-Use simple, everyday language that a high school student would understand. 
+        const prompt = `You are a concise telecom plan advisor. Respond in this exact format:
 
-IMPORTANT: NEVER reference plan numbers, plan IDs, or say "Plan 1", "Plan 2", etc. ONLY use the company names when referring to specific plans.
-
-For each of these plans, provide:
-1. A brief explanation (1-2 sentences) of why this plan matches the user's needs
-2. A short summary of why these 3 plans were selected overall
-
-User's request: "${userInput}"
-
-Plans:
-${plans.map(plan => `
-${plan.companyName} ${plan.name} (${plan.rank}):
-- Carrier: ${plan.carrier}
-- Price: $${plan.price}/mo
-- Data: ${plan.data}
-- Features: ${plan.features.join(', ')}
-- Hotspot: ${plan.hotspot}
-`).join('\n')}
-
-Format your response exactly like this:
 PLAN_EXPLANATIONS:
-${plans.map(plan => `${plan.companyName}: [Your explanation here - do NOT mention any plan numbers]`).join('\n')}
+${plans.map(plan => `${plan.companyName}: [One benefit in 8 words max]`).join('\n')}
 
-OVERALL_SUMMARY:
-[Your summary here - do NOT mention any plan numbers, only use company names]`;
+SUMMARY: [Two facts about the plans in 15 words total]
+
+Example:
+PLAN_EXPLANATIONS:
+Verizon: Unlimited data with premium network coverage
+T-Mobile: Cheapest unlimited plan with decent speeds
+
+SUMMARY: Verizon costs more but faster. T-Mobile saves money.
+
+User request: "${userInput}"
+
+Plans available:
+${plans.map(plan => `
+${plan.companyName} ${plan.name}: $${plan.price}/mo, ${plan.data}, ${plan.features.join(', ')}
+`).join('')}
+
+Respond in exact format shown above.`;
 
         try {
-            const response = await fetch('/api/gemini', {
+            const API_KEY = 'AIzaSyBZpY3-IjZCgxF0a-nQ6Ovs4Pz6N6z1UM0';
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    prompt,
-                    temperature: 0.7,
-                    maxOutputTokens: 500
+                    contents: [{
+                        parts: [{
+                            text: prompt
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.1,
+                        maxOutputTokens: 100
+                    }
                 })
             });
 
@@ -210,7 +225,8 @@ OVERALL_SUMMARY:
             }
 
             const data = await response.json();
-            return this.parseExplanations(data.text);
+            const responseText = data.candidates[0].content.parts[0].text;
+            return this.parseExplanations(responseText);
         } catch (error) {
             console.error('Error getting explanations:', error);
             return {
@@ -221,67 +237,102 @@ OVERALL_SUMMARY:
     }
 
     parseExplanations(text) {
-        const planExplanations = {};
-        // Updated regex to handle company names without "Plan" prefix
-        const planMatches = text.match(/([A-Z\s]+(?:TELECOM|Telecom)?[^:]*): (.*?)(?=\n[A-Z\s]+(?:TELECOM|Telecom)?[^:]*:|$)/gs);
+        console.log("RAW GEMINI RESPONSE:", text); // DEBUG: See what Gemini actually returns
         
-        if (planMatches) {
-            planMatches.forEach(match => {
-                const [_, companyName, explanation] = match.match(/([A-Z\s]+(?:TELECOM|Telecom)?[^:]*): (.*)/s);
-                if (companyName && explanation) {
-                    planExplanations[companyName.trim()] = explanation.trim();
-                }
-            });
-        }
+        const planExplanations = {};
+        let summary = '';
 
-        const summaryMatch = text.match(/OVERALL_SUMMARY:\s*\n(.*)/s);
-        const summary = summaryMatch ? summaryMatch[1].trim() : '';
+        try {
+            // Split response into sections
+            const sections = text.split('SUMMARY:');
+            const planSection = sections[0];
+            const summarySection = sections[1];
+
+            // Parse PLAN_EXPLANATIONS section
+            if (planSection.includes('PLAN_EXPLANATIONS:')) {
+                const explanationText = planSection.split('PLAN_EXPLANATIONS:')[1];
+                const lines = explanationText.split('\n').filter(line => line.trim());
+                
+                lines.forEach(line => {
+                    if (line.includes(':')) {
+                        const [company, explanation] = line.split(':').map(s => s.trim());
+                        if (company && explanation) {
+                            planExplanations[company] = explanation;
+                        }
+                    }
+                });
+            }
+
+            // Parse SUMMARY section
+            if (summarySection) {
+                summary = summarySection.trim();
+            }
+
+            console.log("PARSED EXPLANATIONS:", planExplanations); // DEBUG
+            console.log("PARSED SUMMARY:", summary); // DEBUG
+
+        } catch (error) {
+            console.error("Parsing error:", error);
+            // Fallback: create short explanations manually
+            summary = "These plans offer affordable connectivity options.";
+        }
 
         return {
             planExplanations,
-            summary
+            summary: summary || "Great affordable mobile plan options selected for you."
         };
     }
 
     renderResults(data) {
         const { plans, explanations } = data;
         
-        // Add summary section
+        // Add summary section with light blue background
         const summaryHtml = `
-            <div class="summary">
-                <h3>Why These Plans?</h3>
-                <p>${explanations.summary}</p>
+            <div style="background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; text-align: left;">
+                <h3 style="font-size: 1.25rem; font-weight: 600; color: #4F46E5; margin-bottom: 1rem;">Why These Plans?</h3>
+                <p style="color: #374151; line-height: 1.6; margin: 0;">${explanations.summary}</p>
             </div>
         `;
 
-        // Add plan cards with explanations
+        // Add plan cards with proper 3-column grid
         const plansHtml = `
-            <div class="plans-row">
-                ${plans.map(plan => `
-                    <div class="plan-card">
-                        <div class="plan-header">
-                            <div class="rank-badge rank-${plan.rank.toLowerCase()}">${plan.rank}</div>
-                            <div class="carrier">${plan.companyName}</div>
-                            <div class="plan-name">${plan.name}</div>
-                            <div class="price">$${plan.price}<span style="font-size:0.9rem;font-weight:400;">/mo</span></div>
-                            ${plan.price === 0 ? '<div style="color: #22c55e; font-weight: bold; font-size: 0.9rem;">✓ FREE with Lifeline</div>' : ''}
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                ${plans.map(plan => {
+                    // Get rank badge color
+                    const rankStyles = {
+                        'Best': 'background: #2563EB; color: white;',
+                        'Great': 'background: #059669; color: white;',
+                        'Good': 'background: #D97706; color: white;'
+                    };
+                    const rankStyle = rankStyles[plan.rank] || rankStyles['Good'];
+
+                    return `
+                        <div style="background: white; border: 1px solid #E5E7EB; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); transition: transform 0.2s, box-shadow 0.2s;">
+                            <div style="text-align: center; margin-bottom: 1.5rem;">
+                                <div style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem; ${rankStyle}">${plan.rank}</div>
+                                <div style="font-size: 0.875rem; color: #6B7280; margin-bottom: 0.25rem;">${plan.companyName}</div>
+                                <div style="font-size: 1.25rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">${plan.name}</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #4F46E5; margin-bottom: 1rem;">$${plan.price}<span style="font-size: 0.9rem; font-weight: 400;">/mo</span></div>
+                                ${plan.price === 0 ? '<div style="color: #22c55e; font-weight: bold; font-size: 0.9rem;">✓ FREE with Lifeline</div>' : ''}
+                            </div>
+                            <ul style="list-style: none; margin: 0 0 1rem 0; padding: 0;">
+                                <li style="display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 0.875rem; color: #374151;"><span style="color: #10B981; font-weight: bold; margin-right: 0.5rem;">✓</span>${plan.data} Data</li>
+                                ${plan.features.map(feature => `<li style="display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 0.875rem; color: #374151;"><span style="color: #10B981; font-weight: bold; margin-right: 0.5rem;">✓</span>${feature}</li>`).join('')}
+                                <li style="display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 0.875rem; color: #374151;"><span style="color: #10B981; font-weight: bold; margin-right: 0.5rem;">✓</span>Hotspot: ${plan.hotspot}</li>
+                            </ul>
+                            <div style="background: #F9FAFB; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; font-size: 0.875rem; color: #374151; line-height: 1.5;">
+                                ${explanations.planExplanations[plan.companyName] || 'This plan offers great value for your needs.'}
+                            </div>
+                            <button style="background: #4F46E5; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.875rem; font-weight: 500; cursor: pointer; width: 100%; transition: background 0.2s;" onmouseover="this.style.background='#4338CA'" onmouseout="this.style.background='#4F46E5'">Full Plan Details</button>
                         </div>
-                        <ul class="features">
-                            <li>${plan.data} Data</li>
-                            ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
-                            <li>Hotspot: ${plan.hotspot}</li>
-                        </ul>
-                        <div class="plan-explanation">
-                            ${explanations.planExplanations[plan.companyName] || 'No explanation available.'}
-                        </div>
-                        <button class="plan-details-btn" tabindex="0">Check Eligibility & Apply</button>
-                    </div>
-                `).join('')}
+                    `;
+                }).join('')}
             </div>
         `;
 
         this.results.innerHTML = summaryHtml + plansHtml;
         this.results.style.display = 'flex';
+        this.results.style.flexDirection = 'column';
         
         // Hide Find My Plans, show Start Over
         this.findPlansBtn.style.display = 'none';
