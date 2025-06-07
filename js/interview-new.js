@@ -164,40 +164,28 @@ Plans: ${JSON.stringify(window.MOBILE_PLANS)}`;
     }
 
     async getPlanExplanations(userInput, plans) {
-        const prompt = `CRITICAL CONSTRAINT: You MUST write exactly 2 short sentences maximum for the overall summary. Any longer response will be REJECTED.
+        const prompt = `You are a concise telecom plan advisor. Respond in this exact format:
 
-STRICT RULES:
-- Individual plan explanations: 1 sentence only 
-- Overall summary: EXACTLY 2 sentences maximum
-- Use casual, everyday language
-- NO plan numbers or IDs - only company names
-
-EXAMPLE FORMAT YOU MUST FOLLOW:
 PLAN_EXPLANATIONS:
-IM TELECOM: Great plan with lots of data for just $1.
-IM TELECOM: Solid option with unlimited data and decent price.
-IM TELECOM: Free plan that gives you 6GB and unlimited texts.
+${plans.map(plan => `${plan.companyName}: [One benefit in 8 words max]`).join('\n')}
 
-OVERALL_SUMMARY:
-These plans all give you tons of data and unlimited texts for super cheap prices. The main differences are just the cost and whether you qualify for free service.
+SUMMARY: [Two facts about the plans in 15 words total]
+
+Example:
+PLAN_EXPLANATIONS:
+Verizon: Unlimited data with premium network coverage
+T-Mobile: Cheapest unlimited plan with decent speeds
+
+SUMMARY: Verizon costs more but faster. T-Mobile saves money.
 
 User request: "${userInput}"
 
-Plans:
+Plans available:
 ${plans.map(plan => `
-${plan.companyName} ${plan.name} (${plan.rank}):
-- Price: $${plan.price}/mo
-- Data: ${plan.data}
-- Features: ${plan.features.join(', ')}
-`).join('\n')}
+${plan.companyName} ${plan.name}: $${plan.price}/mo, ${plan.data}, ${plan.features.join(', ')}
+`).join('')}
 
-RESPOND IN EXACT FORMAT SHOWN ABOVE. 2 SENTENCES MAX FOR SUMMARY OR YOUR RESPONSE WILL BE REJECTED.
-
-PLAN_EXPLANATIONS:
-${plans.map(plan => `${plan.companyName}: [1 sentence only]`).join('\n')}
-
-OVERALL_SUMMARY:
-[EXACTLY 2 sentences maximum explaining why these plans work together]`;
+Respond in exact format shown above.`;
 
         try {
             const response = await fetch('/api/gemini', {
@@ -207,8 +195,8 @@ OVERALL_SUMMARY:
                 },
                 body: JSON.stringify({
                     prompt,
-                    temperature: 0.3,
-                    maxOutputTokens: 150
+                    temperature: 0.1,
+                    maxOutputTokens: 100
                 })
             });
 
@@ -229,36 +217,21 @@ OVERALL_SUMMARY:
 
     parseExplanations(text) {
         const planExplanations = {};
-        // Updated regex to handle company names without "Plan" prefix
-        const planMatches = text.match(/([A-Z\s]+(?:TELECOM|Telecom)?[^:]*): (.*?)(?=\n[A-Z\s]+(?:TELECOM|Telecom)?[^:]*:|$)/gs);
+        // Parse plan explanations with the new format
+        const planMatches = text.match(/([A-Z\s]+(?:TELECOM|Telecom)?[^:]*): (.*?)(?=\n[A-Z\s]+(?:TELECOM|Telecom)?[^:]*:|SUMMARY:|$)/gs);
         
         if (planMatches) {
             planMatches.forEach(match => {
                 const [_, companyName, explanation] = match.match(/([A-Z\s]+(?:TELECOM|Telecom)?[^:]*): (.*)/s);
                 if (companyName && explanation) {
-                    // Truncate to 1 sentence if too long
-                    let truncatedExplanation = explanation.trim();
-                    const sentences = truncatedExplanation.split(/[.!?]+/);
-                    if (sentences.length > 1) {
-                        truncatedExplanation = sentences[0] + '.';
-                    }
-                    planExplanations[companyName.trim()] = truncatedExplanation;
+                    planExplanations[companyName.trim()] = explanation.trim();
                 }
             });
         }
 
-        const summaryMatch = text.match(/OVERALL_SUMMARY:\s*\n(.*)/s);
+        // Parse summary with new format
+        const summaryMatch = text.match(/SUMMARY:\s*(.*?)(?:\n|$)/s);
         let summary = summaryMatch ? summaryMatch[1].trim() : '';
-        
-        // FORCE 2 sentence maximum - truncate if longer
-        if (summary) {
-            const sentences = summary.split(/[.!?]+/).filter(s => s.trim().length > 0);
-            if (sentences.length > 2) {
-                summary = sentences.slice(0, 2).join('. ') + '.';
-            } else if (sentences.length <= 2) {
-                summary = sentences.join('. ') + '.';
-            }
-        }
 
         return {
             planExplanations,
