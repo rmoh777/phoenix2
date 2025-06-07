@@ -286,42 +286,53 @@ Respond in exact format shown above.`;
     renderResults(data) {
         const { plans, explanations } = data;
         
-        // Add summary section
+        // Add summary section with light blue background
         const summaryHtml = `
-            <div class="summary">
-                <h3>Why These Plans?</h3>
-                <p>${explanations.summary}</p>
+            <div style="background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; text-align: left;">
+                <h3 style="font-size: 1.25rem; font-weight: 600; color: #4F46E5; margin-bottom: 1rem;">Why These Plans?</h3>
+                <p style="color: #374151; line-height: 1.6; margin: 0;">${explanations.summary}</p>
             </div>
         `;
 
-        // Add plan cards with explanations
+        // Add plan cards with proper 3-column grid
         const plansHtml = `
-            <div class="plans-row">
-                ${plans.map(plan => `
-                    <div class="plan-card">
-                        <div class="plan-header">
-                            <div class="rank-badge rank-${plan.rank.toLowerCase()}">${plan.rank}</div>
-                            <div class="carrier">${plan.companyName}</div>
-                            <div class="plan-name">${plan.name}</div>
-                            <div class="price">$${plan.price}<span style="font-size:0.9rem;font-weight:400;">/mo</span></div>
-                            ${plan.price === 0 ? '<div style="color: #22c55e; font-weight: bold; font-size: 0.9rem;">✓ FREE with Lifeline</div>' : ''}
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                ${plans.map(plan => {
+                    // Get rank badge color
+                    const rankStyles = {
+                        'Best': 'background: #2563EB; color: white;',
+                        'Great': 'background: #059669; color: white;',
+                        'Good': 'background: #D97706; color: white;'
+                    };
+                    const rankStyle = rankStyles[plan.rank] || rankStyles['Good'];
+
+                    return `
+                        <div style="background: white; border: 1px solid #E5E7EB; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); transition: transform 0.2s, box-shadow 0.2s;">
+                            <div style="text-align: center; margin-bottom: 1.5rem;">
+                                <div style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem; ${rankStyle}">${plan.rank}</div>
+                                <div style="font-size: 0.875rem; color: #6B7280; margin-bottom: 0.25rem;">${plan.companyName}</div>
+                                <div style="font-size: 1.25rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">${plan.name}</div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #4F46E5; margin-bottom: 1rem;">$${plan.price}<span style="font-size: 0.9rem; font-weight: 400;">/mo</span></div>
+                                ${plan.price === 0 ? '<div style="color: #22c55e; font-weight: bold; font-size: 0.9rem;">✓ FREE with Lifeline</div>' : ''}
+                            </div>
+                            <ul style="list-style: none; margin: 0 0 1rem 0; padding: 0;">
+                                <li style="display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 0.875rem; color: #374151;"><span style="color: #10B981; font-weight: bold; margin-right: 0.5rem;">✓</span>${plan.data} Data</li>
+                                ${plan.features.map(feature => `<li style="display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 0.875rem; color: #374151;"><span style="color: #10B981; font-weight: bold; margin-right: 0.5rem;">✓</span>${feature}</li>`).join('')}
+                                <li style="display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 0.875rem; color: #374151;"><span style="color: #10B981; font-weight: bold; margin-right: 0.5rem;">✓</span>Hotspot: ${plan.hotspot}</li>
+                            </ul>
+                            <div style="background: #F9FAFB; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; font-size: 0.875rem; color: #374151; line-height: 1.5;">
+                                ${explanations.planExplanations[plan.companyName] || 'This plan offers great value for your needs.'}
+                            </div>
+                            <button style="background: #4F46E5; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.875rem; font-weight: 500; cursor: pointer; width: 100%; transition: background 0.2s;" onmouseover="this.style.background='#4338CA'" onmouseout="this.style.background='#4F46E5'">Full Plan Details</button>
                         </div>
-                        <ul class="features">
-                            <li>${plan.data} Data</li>
-                            ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
-                            <li>Hotspot: ${plan.hotspot}</li>
-                        </ul>
-                        <div class="plan-explanation">
-                            ${explanations.planExplanations[plan.companyName] || 'No explanation available.'}
-                        </div>
-                        <button class="plan-details-btn" tabindex="0">Check Eligibility & Apply</button>
-                    </div>
-                `).join('')}
+                    `;
+                }).join('')}
             </div>
         `;
 
         this.results.innerHTML = summaryHtml + plansHtml;
         this.results.style.display = 'flex';
+        this.results.style.flexDirection = 'column';
         
         // Hide Find My Plans, show Start Over
         this.findPlansBtn.style.display = 'none';
